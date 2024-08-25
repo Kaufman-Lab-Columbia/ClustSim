@@ -3,8 +3,9 @@
 Cluster Simulate SMLM constructs simulations in 2D or 3D of simple or complex structures. 
 By default, the sim function simulates circular clusters on a 3000 x 3000 nm plane. 
 
+```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100)
-
+```
 
 
 
