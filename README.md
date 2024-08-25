@@ -10,7 +10,8 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100)
 The method can simulate circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D via cluster_shape set to 'circle', 'ellipse', 'micelle', or 'fiber'.
 
 ```
-simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, space = 5000, cluster_shape = 'micelle')
+simulate_clusters(num_clusters = 25, clustered_pts = 50,
+	cluster_size = 100, space = 5000, cluster_shape = 'micelle')
 ```
 
 Noise can be added to the simulated data by setting the number of noise points. The background noise can be uniform or have a gradient to mimic noise commonly associated with single molecule localization microscopy. 
