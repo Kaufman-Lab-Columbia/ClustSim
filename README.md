@@ -20,16 +20,16 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50,
 plot_clusters(X,labels)
 ```
 
-Noise can be added to the simulated data by setting the number of noise points. The background noise can be uniform or have a gradient to mimic noise commonly associated with single molecule localization microscopy. 
+Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = 'True'. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, noise = 3000, 
-	gradient = 'False', space = 5000, cluster_shape = 'ellipse', aspect_ratio = 3, fix_AR = False)
+	space = [0,5000])
 
 plot_clusters(X,labels)
 
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, noise = 3000,
-	gradient = 'True', space = 5000, cluster_shape = 'ellipse', aspect_ratio = 3, fix_AR = False)
+	gradient = 'True', space = [0,5000])
 
 plot_clusters(X,labels)
 ```
