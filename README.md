@@ -92,6 +92,11 @@ simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, mi
 
 
 Fibrillar clusters are designed to 
+```
+```
+
+```
+```
 
 
 
