@@ -1,7 +1,7 @@
 # Cluster Simulate SMLM
 
 Cluster Simulate SMLM constructs simulations in 2D or 3D. 
-By default, the simulate_clusters function simulates circular clusters on a 3000 x 3000 nm plane. 
+By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. 
 
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_size = 100)
@@ -10,7 +10,7 @@ plot_clusters(X,labels)
 ```
 
 
-The method can simulate circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D via cluster_shape set to 'circle', 'ellipse', 'micelle', or 'fiber'.
+The method can simulate circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D via cluster_shape set to 'circle', 'ellipse', 'micelle', 'fiber', or 'sphere'. The simulation size can be set by setting space = [lower bound, upper bound]. The separation between clusters can also be set by the min_sep argument. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50,
