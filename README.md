@@ -82,7 +82,7 @@ plot_clusters(X,labels)
 ## License
 Clust_Sim-SMLM is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
-Clust_Sim-SMLM can be referenced with the following citation:
+If you use Clust_Sim-SMLM for your work, cite with the following:
 ```
 Cite here
 ```
