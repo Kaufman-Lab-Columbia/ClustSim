@@ -80,7 +80,10 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100,
 plot_clusters(X,labels)
 ```
 ## License
-Clust_Sim-SMLM is licensed with an MIT license. See license. for more information. 
+Clust_Sim-SMLM is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
-
+Clust_Sim-SMLM can be referenced with the following citation:
+```
+Cite here
+```
 ## Contact 
