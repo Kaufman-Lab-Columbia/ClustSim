@@ -34,6 +34,22 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, noi
 plot_clusters(X,labels)
 ```
 
+More complex cluster shapes can be achieved by adjusting the aspect_ratio to a value greater than 1. Setting fix_AR to 'True' will set all cluster aspect ratios to the same value, 'False' will enable clusters to have an aspect ratio that is randomly set betweeen 1 and aspect_ratio. 
+
+```
+simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, 
+	 space = [0,5000], cluster_shape = 'ellipse', aspect_ratio = 3, fix_AR = 'True')
+
+simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, 
+	 space = [0,5000], cluster_shape = 'micelle', aspect_ratio = 3, fix_AR = 'False')
+
+```
+
+Fibrillar clusters are designed to 
+
+
+
+
 Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision mean and standard deviation will change the log normal distribution which the uncertainty of each point is extracted from. 
 
 ```
