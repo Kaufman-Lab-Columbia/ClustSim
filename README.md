@@ -40,7 +40,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noi
 plot_clusters(X,labels)
 ```
 
-### Complex Clustering
+### Complex Clusters
 More complex cluster shapes can be achieved by adjusting the aspect_ratio to a value greater than 1. Setting fix_AR = True will set all cluster aspect ratios to the same value, fix_AR = False will enable each cluster to have a unique aspect ratio that is randomly set betweeen 1 and the user defined aspect_ratio. 
 
 ```
