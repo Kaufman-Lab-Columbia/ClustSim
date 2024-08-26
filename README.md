@@ -1,6 +1,6 @@
 # Clust-Sim SMLM
 
-Cluster Simulate SMLM constructs simulations in 2D or 3D. 
+Clust-Sim SMLM constructs simulations in 2D or 3D. 
 By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. 
 
 ```
