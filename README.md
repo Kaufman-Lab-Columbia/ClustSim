@@ -99,7 +99,7 @@ plot_clusters(X,labels)
 ```
 
 ### Defining localization uncertainty
-Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each point is extracted from. The precision_params input must be a list corresponding to mean and sigma as defined by the numpy.random.lognormal function. 
+Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each emitter is extracted from. The precision_params input is a list corresponding to the mean and sigma as defined by the numpy.random.lognormal function (precision_params = [mean,sigma]). 
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], precision_params = [3, 0.28])
@@ -110,7 +110,7 @@ plot_clusters(X,labels)
 </p>
 
 
-For 3D clusters, the first two numbers correspond to the lateral uncertainty and the second two correspond to the axial uncertainty.
+For 3D clusters, the first two numbers correspond to the lateral uncertainty and the second two correspond to the axial uncertainty (precision_params = [lateral mean,lateral sigma, axial mean, axial sigma]).
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 50, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], cluster_shape = 'sphere', 
@@ -120,10 +120,20 @@ plot_clusters(X,labels)
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/03dc39da-9fb1-4068-a9a9-55eca9397aa7
 </p>
+	
 ### Simulating Multi-Emitters
+Multi-emitters can be simulated to more fully replicate common scenarios associated with SMLM. The multi_emitter input should be set to an integer value which corresponds to the mean number of localizations per molecule as defined by a poisson distribution. By default multi-emitters are turned off and each molecule is represented by exactly one localization.
+```
+X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
+                              noise_pts = 1500, space = [0,3000], gradient = True, 
+                              precision_params = [3, 0.28], multi_emitter = 3)
 
+plot_clusters(X,labels)
 ```
-```
+<p align="center">
+  <img width="300" height="300" src=https://github.com/user-attachments/assets/d615b980-871c-4ffa-a5ac-ee3d1cd2ea1e
+</p>
+ 
 ## License
 Clust_Sim-SMLM is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
