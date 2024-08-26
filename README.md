@@ -93,21 +93,33 @@ simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, mi
 
 Fibrillar clusters are designed to 
 ```
-```
-
-```
-```
-
-
-
-### Defining localization uncertainty
-Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision mean and standard deviation will change the log normal distribution which the uncertainty of each point is extracted from. 
-
-```
-simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, 
-	 space = 5000, cluster_shape = 'circle', precision_params = [])
+X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 500, cluster_size = 200, noise_pts = 1500, 
+                              space = [0,10000], cluster_shape = 'fiber', length = 2000, D = 0.01)
 plot_clusters(X,labels)
 ```
+
+### Defining localization uncertainty
+Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each point is extracted from. The precision_params input must be a list corresponding to mean and sigma as defined by the numpy.random.lognormal function. 
+```
+X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
+                              noise_pts = 1500, space = [0,3000], precision_params = [3, 0.28])
+plot_clusters(X,labels)
+```
+<p align="center">
+  <img width="300" height="300" src=https://github.com/user-attachments/assets/6ea540c3-c53a-4445-8c6a-cd76ddc73795
+</p>
+
+
+For 3D clusters, the first two numbers correspond to the lateral uncertainty and the second two correspond to the axial uncertainty.
+```
+X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 50, cluster_size = 200, min_sep = 400, 
+                              noise_pts = 1500, space = [0,3000], cluster_shape = 'sphere', 
+                              precision_params = [3, 0.28, 4, 0.28])
+plot_clusters(X,labels)
+```
+<p align="center">
+  <img width="300" height="300" src=https://github.com/user-attachments/assets/03dc39da-9fb1-4068-a9a9-55eca9397aa7
+</p>
 ### Simulating Multi-Emitters
 
 ```
