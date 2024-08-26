@@ -103,7 +103,10 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100,
 	 space = 5000, cluster_shape = 'circle', precision_params = [])
 plot_clusters(X,labels)
 ```
+### Simulating Multi-Emitters
 
+```
+```
 ## License
 Clust_Sim-SMLM is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
