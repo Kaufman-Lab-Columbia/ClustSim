@@ -79,14 +79,17 @@ simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, mi
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/76a0b0f3-29f9-45ef-87d3-9aad4abf0a68
 </p>
+
 ```
 simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, min_sep = 800,
 	noise_pts = 3000, space = [0,5000], cluster_shape = 'micelle',
 	aspect_ratio = 4, fix_AR = False)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/39896990-d5fe-4bcc-8b62-e8b3a510d8c5
 </p>
+
 
 Fibrillar clusters are designed to 
 
@@ -100,6 +103,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100,
 	 space = 5000, cluster_shape = 'circle', precision_params = [])
 plot_clusters(X,labels)
 ```
+
 ## License
 Clust_Sim-SMLM is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
