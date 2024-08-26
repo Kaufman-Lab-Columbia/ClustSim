@@ -14,7 +14,8 @@ The method can simulate circular, elliptic, micellular, or fibrillar clusters in
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50,
-	cluster_size = 100, space = 5000, cluster_shape = 'micelle')
+		cluster_size = 200, space = [0,5000],
+		min_sep = 400, cluster_shape = 'micelle')
 
 plot_clusters(X,labels)
 ```
