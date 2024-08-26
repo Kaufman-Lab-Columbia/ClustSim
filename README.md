@@ -8,7 +8,7 @@ X, labels = simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_siz
 
 plot_clusters(X,labels)
 ```
-		![image](https://github.com/user-attachments/assets/350e1c87-27a2-4488-b6e5-250d0efec4c3)
+
 
 The method can simulate circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D via cluster_shape set to 'circle', 'ellipse', 'micelle', or 'fiber'.
 
