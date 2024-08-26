@@ -20,7 +20,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50,
 plot_clusters(X,labels)
 ```
 
-Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = 'True'. Noise is assigned as -1. 
+Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = True. Noise is assigned as -1. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noise_pts = 3000, 
@@ -29,12 +29,12 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noi
 plot_clusters(X,labels)
 
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noise_pts = 3000,
-	gradient = 'True', space = [0,5000])
+	gradient = True, space = [0,5000])
 
 plot_clusters(X,labels)
 ```
 
-More complex cluster shapes can be achieved by adjusting the aspect_ratio to a value greater than 1. Setting fix_AR to 'True' will set all cluster aspect ratios to the same value, 'False' will enable each cluster to have a unique aspect ratio that is randomly set betweeen 1 and the user defined aspect_ratio. 
+More complex cluster shapes can be achieved by adjusting the aspect_ratio to a value greater than 1. Setting fix_AR = True will set all cluster aspect ratios to the same value, fix_AR = False will enable each cluster to have a unique aspect ratio that is randomly set betweeen 1 and the user defined aspect_ratio. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, 
