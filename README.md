@@ -4,7 +4,7 @@ Cluster Simulate SMLM constructs simulations in 2D or 3D.
 By default, the simulate_clusters function simulates circular clusters on a 3000 x 3000 nm plane. 
 
 ```
-X, labels = simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100)
+X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_size = 100)
 
 plot_clusters(X,labels)
 ```
