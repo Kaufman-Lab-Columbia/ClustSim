@@ -1,7 +1,7 @@
 # Clust-Sim SMLM
 
 Clust-Sim SMLM constructs simulations in 2D or 3D. 
-By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. 
+By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The output is a array of coordinates and an array of integers that map to cluster assignments. 
 
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_size = 100)
@@ -20,7 +20,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50,
 plot_clusters(X,labels)
 ```
 
-Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = 'True'. 
+Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = 'True'. Noise is assigned as -1. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 100, noise = 3000, 
