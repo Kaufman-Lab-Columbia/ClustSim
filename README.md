@@ -6,8 +6,7 @@ Clust-Sim SMLM is a python program designed to constructs single molecule locali
 
 ## How to use
 ### Simple Clusters
-By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The output is a array of coordinates and an array of integers that map to cluster assignments. 
-
+By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The function returns an array of coordinates and an array of integers that map to cluster assignments. The plot_clusters function allows for easy visualization of the simulated clusters. 
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_size = 100)
 
