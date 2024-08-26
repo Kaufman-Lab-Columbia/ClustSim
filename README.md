@@ -28,7 +28,7 @@ plot_clusters(X,labels)
 ```
 
 ### Varying Cluster Shape
-The method can simulate circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D via cluster_shape set to 'circle', 'ellipse', 'micelle', 'fiber', or 'sphere'. The simulation size can be set by setting space = [lower bound, upper bound]. The separation between clusters can also be set by the min_sep argument. 
+Circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D  can be simulated via cluster_shape set to 'circle', 'ellipse', 'micelle', 'fiber', or 'sphere', respectively. The simulation size can be set by setting space = [lower bound, upper bound]. The separation between clusters can also be set by the min_sep argument. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50,
