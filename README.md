@@ -18,6 +18,7 @@ pip install ....?
 ```
 
 ## Usage
+intro_Clust_Sim-SMLM.py follows along with the information provided below.
 ### Simple Clusters
 By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The function returns an array of coordinates and an array of integers that map to cluster assignments. The plot_clusters function allows for easy visualization of the simulated clusters. 
 ```
