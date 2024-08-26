@@ -91,15 +91,18 @@ simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, mi
 </p>
 
 
-Fibrillar clusters are designed to 
+Fibrillar clusters can be simulated by additional inputting a length and a persistence parameter, D. Here, the cluster_size input sets the cluster width. Decreasing the D parameter will result in more persistent fibers. 
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 500, cluster_size = 200, noise_pts = 1500, 
                               space = [0,10000], cluster_shape = 'fiber', length = 2000, D = 0.01)
 plot_clusters(X,labels)
 ```
+<p align="center">
+  <img width="300" height="300" src=https://github.com/user-attachments/assets/697c989b-dcbc-4936-8434-a5138c802c4c
+</p>
 
 ### Defining localization uncertainty
-Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each emitter is extracted from. The precision_params input is a list corresponding to the mean and sigma as defined by the numpy.random.lognormal function (precision_params = [mean,sigma]). 
+Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each emitter is extracted from. The precision_params input is a list corresponding to the mean and sigma as defined by the numpy.random.lognormal function (precision_params = [mean,sigma]). By default, these parameters are both set to 0.
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], precision_params = [3, 0.28])
@@ -121,7 +124,7 @@ plot_clusters(X,labels)
   <img width="300" height="300" src=https://github.com/user-attachments/assets/03dc39da-9fb1-4068-a9a9-55eca9397aa7
 </p>
 	
-### Simulating Multi-Emitters
+### Simulating multi-emitters
 Multi-emitters can be simulated to more fully replicate common scenarios associated with SMLM. The multi_emitter input should be set to an integer value which corresponds to the mean number of localizations per molecule as defined by a poisson distribution. By default multi-emitters are turned off and each molecule is represented by exactly one localization.
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
