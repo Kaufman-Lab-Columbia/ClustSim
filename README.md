@@ -27,7 +27,7 @@ X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_siz
 plot_clusters(X,labels)
 ```
 <p align="center">
-  <img width="460" height="300" src=https://github.com/user-attachments/assets/6a7a0dee-2d11-4a39-b396-356e090aa614
+  <img width="300" height="300" src=https://github.com/user-attachments/assets/6a7a0dee-2d11-4a39-b396-356e090aa614
 </p>
 
 ### Varying Cluster Shape
