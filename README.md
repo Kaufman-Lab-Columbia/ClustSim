@@ -1,6 +1,10 @@
 # Clust-Sim SMLM
 
 Clust-Sim SMLM constructs simulations in 2D or 3D. 
+
+
+
+##How to use
 By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The output is a array of coordinates and an array of integers that map to cluster assignments. 
 
 ```
