@@ -38,10 +38,10 @@ More complex cluster shapes can be achieved by adjusting the aspect_ratio to a v
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, min_sep = 400,
-	 space = [0,5000], cluster_shape = 'ellipse', aspect_ratio = 4, fix_AR = 'True')
+	 space = [0,5000], cluster_shape = 'ellipse', aspect_ratio = 4, fix_AR = True)
 
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, min_sep = 400,
-	 space = [0,5000], cluster_shape = 'micelle', aspect_ratio = 4, fix_AR = 'False')
+	 space = [0,5000], cluster_shape = 'micelle', aspect_ratio = 4, fix_AR = False)
 
 ```
 
