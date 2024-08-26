@@ -34,6 +34,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noi
 
 plot_clusters(X,labels)
 ```
+```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noise_pts = 3000,
 	space = [0,5000], gradient = True)
 
@@ -47,6 +48,7 @@ More complex cluster shapes can be achieved by adjusting the aspect_ratio to a v
 simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, min_sep = 800,
 	noise_pts = 3000, space = [0,5000], cluster_shape = 'ellipse',
 	aspect_ratio = 4, fix_AR = True)
+```
 ```
 simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, min_sep = 800,
 	noise_pts = 3000, space = [0,5000], cluster_shape = 'micelle',
