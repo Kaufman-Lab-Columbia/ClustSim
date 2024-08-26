@@ -4,7 +4,9 @@ Clust-Sim SMLM is a python program designed to constructs single molecule locali
 
 ## Getting Started
 ### Dependencies
-
+-sci-kit learn
+-matplotlib
+-numpy
 ### Installation
 
 ## Usage
