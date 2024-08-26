@@ -26,7 +26,9 @@ X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_siz
 
 plot_clusters(X,labels)
 ```
-![image](https://github.com/user-attachments/assets/6a7a0dee-2d11-4a39-b396-356e090aa614)
+<p align="center">
+  <img width="460" height="300" src=![image](https://github.com/user-attachments/assets/6a7a0dee-2d11-4a39-b396-356e090aa614)
+</p>
 
 ### Varying Cluster Shape
 Circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D  can be simulated via cluster_shape set to 'circle', 'ellipse', 'micelle', 'fiber', or 'sphere', respectively. The simulation size can be set by setting space = [lower bound, upper bound]. The separation between clusters can also be set by the min_sep argument. 
