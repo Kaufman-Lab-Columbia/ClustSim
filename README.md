@@ -1,6 +1,6 @@
 # Clust-Sim SMLM
 
-Clust-Sim SMLM is a python program designed to constructs single molecule localization microscopy (SMLM) simulations in 2D or 3D. The implementation is capable of constructing clusters with varying degrees of complexity, allows for the addition of noise, and can enable the user to set the underlying uncertainty distributions of the localizations. 
+Clust-Sim SMLM is a python program designed to constructs single molecule localization microscopy (SMLM) simulations in 2D or 3D. The implementation is capable of constructing clusters with varying degrees of complexity, allows for the addition of noise, can enable the user to set the underlying uncertainty distributions of the localizations, and is capable of simulating multi-emitter scenarios. 
 
 ## Getting Started
 ### Dependencies
