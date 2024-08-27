@@ -6,7 +6,7 @@ ClustSim is a python program designed to construct single molecule localization 
 ### Dependencies
 - sci-kit learn
 - matplotlib
-- numpy
+- NumPy
 ### Installation
 ClustSim can be installed via pip:
 ```
