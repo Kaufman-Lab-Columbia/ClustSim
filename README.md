@@ -1,11 +1,11 @@
 # ClustSim 
 
-ClustSim is a python program designed to construct single molecule localization microscopy (SMLM) simulations in 2D or 3D. The implementation is capable of constructing clusters with varying degrees of complexity, allows for the addition of noise, can enable the user to set the underlying uncertainty distributions of the localizations, and is capable of simulating multi-emitter scenarios. 
+ClustSim is a Python program designed to construct simulated single molecule localization microscopy (SMLM) data in 2D or 3D. This implementation is capable of simulating clusters with varying degrees of complexity, clusters with noise, localization uncertainties, and multi-emitter behavior. 
 
 ## Getting Started
 ### Dependencies
-- sci-kit learn
-- matplotlib
+- scikit-learn
+- Matplotlib
 - NumPy
 ### Installation
 ClustSim can be installed via pip:
@@ -17,21 +17,23 @@ or
 pip install ....?
 ```
 
-## Usage
+## Basic Usage
 Intro_ClustSim.ipynb follows along with the information provided below.
 ### Simple Clusters
-By default, the simulate_clusters function simulates circular clusters on a 1000 x 1000 nm plane. The function returns an array of coordinates and an array of integers that map to cluster assignments. The plot_clusters function allows for easy visualization of the simulated clusters. 
+By default, `simulate_clusters()` simulates circular clusters on a 1000 x 1000 plane (arbitrary units). The function returns an `(N, d)` shaped array of coordinates and an `(N,)` shaped array of integer labels that map points to cluster assignments, where `N` is the total number of points deposited in the simulation plane and `d` is the dimensionality of the data. For visualization of the simulated clusters, use `plot_clusters()` as demonstrated below.
+
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 50, cluster_size = 100)
 
 plot_clusters(X,labels)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/6a7a0dee-2d11-4a39-b396-356e090aa614
 </p>
 
 ### Varying Cluster Shape
-Circular, elliptic, micellular, or fibrillar clusters in 2D or spherical clusters in 3D  can be simulated via cluster_shape set to 'circle', 'ellipse', 'micelle', 'fiber', or 'sphere', respectively. The simulation size can be set by setting space = [lower bound, upper bound]. The separation between clusters can also be set by the min_sep argument. 
+Circular, elliptical, micellular, or fibrillar clusters in 2D, or spherical clusters in 3D, can be simulated by setting the `cluster_shape` parameter to `'circle'`, `'ellipse'`, `'micelle'`, `'fiber'`, or `'sphere'`, respectively. The simulation size is defined by setting `space = [lower_bound, upper_bound]`. The separation between cluster centers can also be set using the `min_sep` argument. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50,
@@ -40,12 +42,13 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50,
 
 plot_clusters(X,labels)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/f309b8ad-be30-4198-afdf-e51686312489
 </p>
 
 ### Simulating Noise
-Noise can be added to the simulated data by setting the number of noise points to be added. The background noise is uniform by default can be set to have a gradient to mimic noise commonly associated with single molecule localization microscopy by setting gradient = True. Noise is assigned as -1. 
+Noise can be added to simulated clustered data by setting the number of noise points to be deposited among already existing clustered points. The background noise is uniform by default, but can be modified to have a gradient to mimic the uneven noise commonly associated with TIRF imaging in SMLM. This is done by setting `gradient = True`. Noise points are assigned a label of -1. 
 
 ```
 simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noise_pts = 3000, 
@@ -53,6 +56,7 @@ simulate_clusters(num_clusters = 25, clustered_pts = 50, cluster_size = 200, noi
 
 plot_clusters(X,labels)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/33576e83-60e8-4e8e-85c8-2cb5a1b15ace
 </p>
@@ -69,13 +73,14 @@ plot_clusters(X,labels)
 
 
 ### Complex Clusters
-More complex cluster shapes can be achieved by adjusting the aspect_ratio to a value greater than 1. Setting fix_AR = True will set all cluster aspect ratios to the same value, fix_AR = False will enable each cluster to have a unique aspect ratio that is randomly set betweeen 1 and the user defined aspect_ratio. 
+More complex cluster shapes can be achieved by adjusting `aspect_ratio` to a value greater than 1. The input parameter `fix_AR = True` will set all cluster aspect ratios to the same value, while `fix_AR = False` will enable each cluster to have a unique aspect ratio that is randomly set betweeen 1 and the user defined `aspect_ratio`. 
 
 ```
 simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, min_sep = 800,
 	noise_pts = 3000, space = [0,5000], cluster_shape = 'ellipse',
 	aspect_ratio = 4, fix_AR = True)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/76a0b0f3-29f9-45ef-87d3-9aad4abf0a68
 </p>
@@ -91,29 +96,34 @@ simulate_clusters(num_clusters = 15, clustered_pts = 100, cluster_size = 200, mi
 </p>
 
 
-Fibrillar clusters can be simulated by additional inputting a length and a persistence parameter, D. Here, the cluster_size input sets the cluster width. Decreasing the D parameter will result in more persistent fibers. 
+Fibrillar clusters can be simulated by inputting an additional fiber size parameter, `length`, and a fiber persistence parameter, `D`. Here, the `cluster_size` input sets the fiber width. Decreasing the `D` parameter will result in straighter fibers, while increasing `D` will result in more fiber curvature. 
+
 ```
 X, labels = simulate_clusters(num_clusters = 10, clustered_pts = 500, cluster_size = 200, noise_pts = 1500, 
                               space = [0,10000], cluster_shape = 'fiber', length = 2000, D = 0.01)
 plot_clusters(X,labels)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/697c989b-dcbc-4936-8434-a5138c802c4c
 </p>
 
 ### Defining localization uncertainty
-Designed to recapitulate single molecule localization microscopy, the cluster construction enables the user to define the uncertainty distribution of positions. Setting the precision will change the underlying log normal distribution which the FWHM uncertainty of each emitter is extracted from. The precision_params input is a list corresponding to the mean and sigma as defined by the numpy.random.lognormal function (precision_params = [mean,sigma]). By default, these parameters are both set to 0.
+In SMLM, each point has a localization uncertainty that is dependent on the signal intensity of the emitter in the source image. Heterogeneous signal intensities across many emitters lead to a generally broad spread of uncertainties, which often follows a log-normal distribution. To recapitulate experimental uncertainties, the user can specify the characteristics of the underlying log-normal distribution from which each point receives a unique localization uncertainty. The `precision_params` input is a list corresponding to the mean and standard deviation of this log-normal distribution. Uncertainties are drawn randomly from this distribution using `numpy.random.lognormal()`, where `precision_params = [mean, stdev]`. By default, these parameters are both set to 0.
+
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], precision_params = [3, 0.28])
 plot_clusters(X,labels)
 ```
+
 <p align="center">
   <img width="300" height="300" src=https://github.com/user-attachments/assets/6ea540c3-c53a-4445-8c6a-cd76ddc73795
 </p>
 
 
-For 3D clusters, the first two numbers correspond to the lateral uncertainty and the second two correspond to the axial uncertainty (precision_params = [lateral mean,lateral sigma, axial mean, axial sigma]).
+For 3D clusters, the first two numbers in `precision_params` correspond to the lateral uncertainty, while the next two correspond to the axial uncertainty, such that `precision_params = [lateral_mean, lateral_stdev, axial_mean, axial_stdev]`.
+
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 50, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], cluster_shape = 'sphere', 
@@ -125,7 +135,8 @@ plot_clusters(X,labels)
 </p>
 	
 ### Simulating multi-emitters
-Multi-emitters can be simulated to more fully replicate common scenarios associated with SMLM. The multi_emitter input should be set to an integer value which corresponds to the mean number of localizations per molecule as defined by a poisson distribution. By default multi-emitters are turned off and each molecule is represented by exactly one localization.
+During SMLM imaging, a single emitter will commonly blink on and off multiple times, leading to multiple localizations for a single molecule. Providing an input value for `multi_emitter` will recapitulate this behavior. The input for `multi_emitter` should be set to a floating point value which corresponds to the mean number of localizations per molecule as defined by a Poisson distribution. By default, `multi_emitter` is set to `None`, resulting in each molecule being represented by exactly one localization.
+
 ```
 X, labels = simulate_clusters(num_clusters = 20, clustered_pts = 25, cluster_size = 200, min_sep = 400, 
                               noise_pts = 1500, space = [0,3000], gradient = True, 
