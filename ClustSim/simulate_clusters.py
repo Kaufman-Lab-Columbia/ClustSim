@@ -6,10 +6,10 @@ from sklearn.metrics import pairwise_distances
 def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, gradient = False, 
                       space = [0,1000], cluster_shape = 'circle', aspect_ratio = 1, fix_AR = False, 
                       precision_params = [0,0], min_sep = None, 
-                      length = False, D = False, Dt = 1, rate = 10, method = 'normal', multi_emitter = False):
+                      length = False, D = False, rate = 10, method = 'normal', multi_emitter = False):
     
     #First create the clusters
-    X_clusts, label_list = deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, Dt, rate)     
+    X_clusts, label_list = deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate)     
     #Add noise to the data
     X_noise = add_noise_pts(X_clusts, noise_pts, space, cluster_shape, gradient)
     label_pad = np.pad(label_list, (0, len(X_noise)), 'constant', constant_values = -1)
@@ -21,7 +21,7 @@ def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, 
     return X_points_final, labels
 
     
-def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, Dt, rate):
+def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate):
     
     if min_sep == None:
         min_sep = 0.5 * np.max(cluster_size)
@@ -44,7 +44,7 @@ def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ra
         elif cluster_shape == 'micelle':
             X_temp = deposit_cluster_micelle(centers[i], cluster_width, aspect_ratio, pts, fix_AR)
         elif cluster_shape == 'fiber':
-            X_temp = deposit_cluster_fiber(centers[i], cluster_width, pts, length, D, Dt, rate, method)
+            X_temp = deposit_cluster_fiber(centers[i], cluster_width, pts, length, D, rate, method)
         elif cluster_shape == 'sphere':
             X_temp = deposit_cluster_sphere(centers[i], cluster_width, pts)   
             
@@ -169,7 +169,7 @@ def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR = Fa
     
     return np.vstack((x,y)).T
 
-def deposit_cluster_fiber(center, cluster_size, pts, length, D, Dt, rate, method):
+def deposit_cluster_fiber(center, cluster_size, pts, length, D, rate, method):
     
     
     if type(length) == list:
@@ -185,7 +185,7 @@ def deposit_cluster_fiber(center, cluster_size, pts, length, D, Dt, rate, method
     angles[0] = np.random.uniform(0, 2 * np.pi)
     noise = np.random.normal(0, np.sqrt(2*D), size=length)
     for i in range(1, steps):
-        angles[i] = angles[i - 1] + noise[i] * Dt
+        angles[i] = angles[i - 1] + noise[i] * 1
     
     angle_index = 0
     current_ang = None
