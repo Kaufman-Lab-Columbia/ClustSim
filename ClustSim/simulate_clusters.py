@@ -39,7 +39,10 @@ def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ra
             cluster_width = np.random.randint(cluster_size[0], cluster_size[1]+1, 1)
         if type(clustered_pts) ==list:
             pts = np.random.randint(clustered_pts[0],clustered_pts[1]+1, 1)
-        if cluster_shape == 'circle' or cluster_shape == 'ellipse':
+
+        if cluster_shape == 'circle':
+            X_temp = deposit_cluster_ellipse(centers[i], cluster_width, 1.0, pts, True)
+        elif cluster_shape == 'ellipse':
             X_temp = deposit_cluster_ellipse(centers[i], cluster_width, aspect_ratio, pts, fix_AR)
         elif cluster_shape == 'micelle':
             X_temp = deposit_cluster_micelle(centers[i], cluster_width, aspect_ratio, pts, fix_AR)
