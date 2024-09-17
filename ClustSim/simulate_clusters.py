@@ -144,15 +144,13 @@ def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR):
 #Micelle clusters ***********************************
 def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
     
-    if fix_AR == True:
-        elongation = aspect_ratio
+    if aspect_ratio < 1.0:
+        raise ValueError(f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0.")
     else:
-        if aspect_ratio > 1:
-            elongation = np.random.uniform(1,aspect_ratio)
-        elif aspect_ratio < 1:
-            elongation = np.random.uniform(aspect_ratio,1)
+        if fix_AR == True:
+            elongation = aspect_ratio
         else:
-            elongation = 1
+            elongation = np.random.uniform(1, aspect_ratio)
             
     R = cluster_size/2
     theta_inner = np.random.uniform(0,2*np.pi, pts)
