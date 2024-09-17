@@ -6,7 +6,7 @@ from sklearn.metrics import pairwise_distances
 def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, gradient = False, 
                       space = [0,1000], cluster_shape = 'circle', aspect_ratio = 1, fix_AR = False, 
                       precision_params = [0,0], min_sep = None, 
-                      length = False, D = False, rate = 10, method = 'normal', multi_emitter = False):
+                      length = None, D = None, rate = 10, method = 'normal', multi_emitter = None):
     
     #First create the clusters
     X_clusts, label_list = deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate)     
@@ -111,7 +111,7 @@ def dist_check(test_centers,threshold):
     
     return outcome
 
-def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR = False):
+def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR):
     
     cluster_sd = cluster_size / 4
 
@@ -139,7 +139,7 @@ def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR = Fa
     return np.vstack((x,y)).T
 
 #Micelle clusters ***********************************
-def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR = False):
+def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
     
     if fix_AR == True:
         elongation = aspect_ratio
