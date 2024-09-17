@@ -110,18 +110,20 @@ def dist_check(test_centers,threshold):
 
 def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR = False):
     
-    cluster_sd = cluster_size/4
-    if aspect_ratio > 1 or aspect_ratio < 1:
-        if fix_AR == True:
-            elongation = cluster_sd*aspect_ratio
-        else:
-            elongation = np.random.uniform(cluster_sd,cluster_sd*aspect_ratio)
+    cluster_sd = cluster_size / 4
+
+    if aspect_ratio < 1.0:
+        raise ValueError(f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0.")
     else:
-        elongation = cluster_sd
-    
-    x_hold = np.random.normal(loc=center[0],scale=cluster_sd,size=int(pts))
-    y_hold = np.random.normal(loc=center[1],scale=elongation,size=int(pts))
-    theta_rot = np.random.uniform(0,(2*np.pi))
+        if fix_AR == True:
+            elongation = cluster_sd * aspect_ratio
+        else:
+            elongation = np.random.uniform(cluster_sd, cluster_sd * aspect_ratio)
+
+    x_hold = np.random.normal(loc=center[0], scale=cluster_sd, size=int(pts))
+    y_hold = np.random.normal(loc=center[1], scale=elongation, size=int(pts))
+    theta_rot = np.random.uniform(0, 2 * np.pi)
+
     x = []
     y = []
     for j in range(len(x_hold)):
