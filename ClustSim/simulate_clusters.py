@@ -5,7 +5,7 @@ from sklearn.metrics import pairwise_distances
 
 def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, gradient = False, 
                       space = [0,1000], cluster_shape = 'circle', aspect_ratio = 1, fix_AR = False, 
-                      precision_params = [0,0], min_sep = 0.5*cluster_size, 
+                      precision_params = [0,0], min_sep = None, 
                       length = False, D = False, Dt = 1, rate = 10, method = 'normal', multi_emitter = False):
     
     #First create the clusters
@@ -23,6 +23,9 @@ def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, 
     
 def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, Dt, rate):
     
+    if min_sep == None:
+        min_sep = 0.5 * np.max(cluster_size)
+
     centers,cond = set_centers(num_clusters,space,min_sep, cluster_shape)
     if cond==True:
         print('Failed')
