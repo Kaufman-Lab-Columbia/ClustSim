@@ -173,67 +173,66 @@ def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
 def deposit_cluster_fiber(center, cluster_size, pts, length, D, rate, method):
     
     if type(length) == list:
-        length = np.random.randint(length[0] // rate, length[1] // rate + 1, 1) * rate
+        length = np.random.randint(length[0] // rate, length[1] // rate + 1, 1)[0] * rate
     else:
         length = (length // rate) * rate
     
-    steps = length // rate
+    steps = length // rate - 1
     density = np.round(pts / (length / rate)).astype(int)
     
     #define fiber path
     angles = np.zeros(steps)
     angles[0] = np.random.uniform(0, 2 * np.pi)
-    noise = np.random.normal(0, np.sqrt(2*D), size=length)
+    noise = np.random.normal(0, np.sqrt(2 * D), size=length)
     for i in range(1, steps):
         angles[i] = angles[i - 1] + noise[i] * 1
     
     angle_index = 0
-    current_ang = None
     disps = []
-    angles_rec = []
     for i in range(steps):
         current_ang = angles[angle_index]
         angle_index += 1
         # calculate displacement based on fixed growth rate
         dx = rate * np.cos(current_ang)
         dy = rate * np.sin(current_ang)
-        angles_rec.append(current_ang)
         disps.append([dx, dy])
+
     disps = np.array(disps)
-    start = [0,0] # random xy point in space
+    start = [0, 0] # random xy point in space
     pos = []
     pos.append(start)
     for i in disps:
         current = np.array(pos[-1])
-        xy_temp = current+i
+        xy_temp = current + i
         pos.append(xy_temp)   
     fiber_frame = np.array(pos)
     
     
-    #Shift fiber centers to center of backbone
+    # Shift fiber centers to center of backbone
     frame_pts = len(fiber_frame)
-    if frame_pts%2 == 0:
-        frame_center = fiber_frame[int(frame_pts/2)]
+
+    if frame_pts % 2 == 0:
+        frame_center = fiber_frame[int(frame_pts / 2)]
     else:
-        print((frame_pts/2)-0.5)
-        frame_centera = fiber_frame[int((frame_pts/2) - 0.5)]
-        frame_centerb = fiber_frame[int((frame_pts/2) + 0.5)]
-        frame_center = [frame_centera[0]+frame_centerb[0], frame_centera[1], frame_centerb[1]]
-    x_shift_center = center[0]-frame_center[0]
-    y_shift_center = center[1]-frame_center[1]
-    fiber_frame_recenter = np.vstack((fiber_frame[:,0] + x_shift_center, fiber_frame[:,1]+y_shift_center)).T
+        frame_center_a = fiber_frame[int((frame_pts / 2) - 0.5)]
+        frame_center_b = fiber_frame[int((frame_pts / 2) + 0.5)]
+        frame_center = [(frame_center_a[0] + frame_center_b[0]) / 2, (frame_center_a[1] + frame_center_b[1]) / 2]
+
+    x_shift_center = center[0] - frame_center[0]
+    y_shift_center = center[1] - frame_center[1]
+    fiber_frame_recenter = np.vstack((fiber_frame[:,0] + x_shift_center, fiber_frame[:,1] + y_shift_center)).T
         
     x = []
     y = []
     for i in fiber_frame_recenter:
-        if method=='normal':
+        if method == 'normal':
             # normally distributed points
-            x_hold = np.random.normal(i[0],cluster_size/4,density)
-            y_hold = np.random.normal(i[1],cluster_size/4,density)
-        elif method=='random': 
+            x_hold = np.random.normal(i[0], cluster_size / 4, density)
+            y_hold = np.random.normal(i[1], cluster_size / 4, density)
+        elif method == 'random': 
             # randomly distributed points
-            x_hold = np.random.uniform(i[0]-(cluster_size/2),i[0]+(cluster_size/2),density)
-            y_hold = np.random.uniform(i[1]-(cluster_size/2),i[1]+(cluster_size/2),density)
+            x_hold = np.random.uniform(i[0] - (cluster_size / 2), i[0] + (cluster_size / 2), density)
+            y_hold = np.random.uniform(i[1] - (cluster_size / 2), i[1] + (cluster_size / 2), density)
             
         x.append(x_hold)
         y.append(y_hold)
