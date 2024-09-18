@@ -172,14 +172,13 @@ def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
 
 def deposit_cluster_fiber(center, cluster_size, pts, length, D, rate, method):
     
-    
     if type(length) == list:
-        length  = np.random.randint(int(length[0]/10), int(length[1]/10)+1, 1)*10
-        steps = (np.round(length/rate).astype(int)-1)[0]
+        length = np.random.randint(length[0] // rate, length[1] // rate + 1, 1) * rate
     else:
-        steps = np.round(length/rate).astype(int)-1
+        length = (length // rate) * rate
     
-    density = np.round(pts/(length/rate)).astype(int)
+    steps = length // rate
+    density = np.round(pts / (length / rate)).astype(int)
     
     #define fiber path
     angles = np.zeros(steps)
