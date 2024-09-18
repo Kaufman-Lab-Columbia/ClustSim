@@ -300,22 +300,22 @@ def add_noise_pts(X_coords, noise_pts, space, cluster_shape, gradient = False):
 # default behavior is no z (precision arrays set to None)
 # conditional execution of the z dim requires both mean and sigma for the axial to not be None-type
 def add_uncertainty(coords, label_pad, multi_emitter, mean_lat_prec, sigma_lat_prec,
-                    mean_ax_prec=None, sigma_ax_prec=None, ):
+                    mean_ax_prec=None, sigma_ax_prec=None):
    
     num_points = coords.shape[0]
 
     # Generate the lateral precisions
-    lateral_prec = np.random.lognormal(mean=mean_lat_prec, sigma=sigma_lat_prec, size=num_points)/2.355
+    lateral_prec = np.random.lognormal(mean=mean_lat_prec, sigma=sigma_lat_prec, size=num_points) / 2.355
 
     # Generate the axial positions if needed
     if mean_ax_prec and sigma_ax_prec:
-        axial_prec = np.random.lognormal(mean=mean_ax_prec, sigma=sigma_ax_prec, size=num_points)/2.355
+        axial_prec = np.random.lognormal(mean=mean_ax_prec, sigma=sigma_ax_prec, size=num_points) / 2.355
    
     x_ns = []
     y_ns = []
     z_ns = []
     
-    if multi_emitter == False:
+    if multi_emitter is None:
         multi_emitters_list = np.full(num_points, 1)
         labels = label_pad
     else:
