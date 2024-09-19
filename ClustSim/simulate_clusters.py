@@ -4,8 +4,8 @@ from sklearn.metrics import pairwise_distances
 
 
 def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, gradient = False, 
-                      space = [0,1000], cluster_shape = 'circle', aspect_ratio = 1, fix_AR = False, 
-                      precision_params = [0,0], min_sep = None, 
+                      space = (0, 1000), cluster_shape = 'circle', aspect_ratio = 1.0, fix_AR = False, 
+                      precision_params = (0.0, 0.0), min_sep = None, 
                       length = None, D = None, rate = 10, method = 'normal', multi_emitter = None):
     
     #First create the clusters
