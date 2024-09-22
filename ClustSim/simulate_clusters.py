@@ -134,10 +134,14 @@ def simulate_clusters(
     """
 
     # Create the clusters with the specified parameters
-    X_clusts, label_list = deposit_clusters(
-        num_clusters, clustered_pts, cluster_size, space, aspect_ratio,
-        min_sep, cluster_shape, fix_AR, method, length, D, rate
-    )
+    try:
+        X_clusts, label_list = deposit_clusters(
+            num_clusters, clustered_pts, cluster_size, space, aspect_ratio,
+            min_sep, cluster_shape, fix_AR, method, length, D, rate
+        )
+    except ValueError as e:
+        print(f"Error creating clusters: {e}")
+        return None, None
 
     # Add noise points after depositing clusters
     X_noise = add_noise_pts(
@@ -195,9 +199,9 @@ def deposit_clusters(
 
     centers,cond = set_centers(num_clusters, space, min_sep, cluster_shape)
 
-    if cond==True:
-        print('Failed')
-        return None
+    if cond == True:
+        raise ValueError("Distance between clusters is too restrictive")
+
 
     pts = clustered_pts
     cluster_width = cluster_size
@@ -283,7 +287,6 @@ def set_centers(
                 iterations += 1
                 if iterations > 50000:
                     terminate = True
-                    print('Distance between clusters is too restrictive')
                     break
     else:
         centers[0] = [
@@ -306,7 +309,6 @@ def set_centers(
                 iterations += 1
                 if iterations > 50000:
                     terminate = True
-                    print('Distance between clusters is too restrictive')
                     break
 
     return np.array(centers), terminate
