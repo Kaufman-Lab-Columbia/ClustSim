@@ -1,13 +1,135 @@
 import math
 import numpy as np
 from sklearn.metrics import pairwise_distances
+from typing import List, Tuple, Union, Optional
+import numpy.typing as npt
 
-
-def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, gradient = False, 
-                      space = (0, 1000), cluster_shape = 'circle', aspect_ratio = 1.0, fix_AR = False, 
-                      precision_params = (0.0, 0.0), min_sep = None, 
-                      length = None, D = None, rate = 10, method = 'normal', multi_emitter = None):
+def simulate_clusters(
+    num_clusters: int, 
+    clustered_pts: Union[int, Tuple[int, int]], 
+    cluster_size: Union[int, Tuple[int, int]], 
+    noise_pts: int = 0, 
+    gradient: bool = False, 
+    space: Tuple[int, int] = (0, 1000), 
+    cluster_shape: str = 'circle', 
+    aspect_ratio: float = 1.0, 
+    fix_AR: bool = True, 
+    precision_params: Union[Tuple[float, float], Tuple[float, float, float, float]] = (0.0, 0.0), 
+    min_sep: Optional[float] = None, 
+    length: Union[int, Tuple[int, int]] = 300, 
+    D: float = 0.01, 
+    rate: int = 10, 
+    method: str = 'normal', 
+    multi_emitter: Optional[float] = None
+) -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.int_]]:
+    """
+    Simulates clusters of variable type on a simlation grid of specified size.
     
+    Args:
+        num_clusters (int): 
+            The number of clusters to deposit.
+        clustered_pts (Union[int, Tuple[int, int]]): 
+            The number of points per cluster. If a single integer is passed, all
+            clusters will contain the same number of points. If a pair of integers
+            (a, b) is passed, the number of points will be variable and this input
+            will specify the lower (a) and upper (b) bounds of the possible points
+            per cluster. The number of points belonging to each cluster will be
+            selected randomly within the input range [a, b - 1].
+        cluster_size (Union[int, Tuple[int, int]]):
+            The size of each cluster. If a single integer is passed, all clusters
+            will be assigned the same size. If a pair of integers (a, b) is passed, 
+            cluster sizes will be variable and this input will specify the lower (a)
+            and upper (b) bounds of the possible cluster sizes. The size of each
+            cluster will be selected randomly within the input range [a, b - 1]. See
+            specific cluster deposition functions for the definition of size for
+            each cluster type.
+        noise_pts (int): 
+            The number of unclustered noise points to add to the simulation grid
+            after depositing clustered points.
+        gradient (bool): 
+            Sets the character of the noise. False will result in uniform random
+            noise, while True will yield an uneven gradient of noise.
+        space (Tuple[int, int]): 
+            The bounds of the simulation plane, (lower_bound, upper_bound). These
+            bounds are applied to all dimensions.
+        cluster_shape (str): 
+            The type of clusters to simulate. This can be set to: "circle",
+            "ellipse", "micelle", "fiber", or "sphere".
+        aspect_ratio (float): 
+            The aspect ratio of elliptical or micellular clusters. This argument is
+            ignored for circular and spherical clusters (which are fixed to have
+            aspect ratio = 1.0) as well as for fibers, which do not have a
+            meaningful concept of an aspect ratio.
+        fix_AR (bool):
+            Sets either a constant (True) or variable (False) aspect ratio for
+            elliptical and micellular clusters. If False, aspect ratios will be
+            randomly assigned to each cluster by random uniform selection in the
+            range [1.0, aspect_ratio), as specified by the aspect_ratio argument.
+        precision_params (Union[Tuple[float, float], Tuple[float, float, float, float]]):
+            The mean and standard deviation of the lognormal distribution from which
+            localization uncertainties will be drawn, passed as (mean, stdev). For
+            3D data, parameters should be specified for both lateral and axial
+            precision as (mean_lateral, stdev_lateral, mean_axial, stdev_axial).
+        min_sep (Optional[float]):
+            The minimum separation between cluster centers. If no input is given,
+            the default value is set as follows: for a single cluster_size input
+            min_sep = 0.5 * cluster_size, while for a (lower_bound, upper_bound)
+            cluster_size input, min_sep = 0.5 * max(cluster_size).
+        length (Union[int, Tuple[int, int]]):
+            The length of a fibrillar cluster. Fibrillar clusters are deposited
+            first by longitudinally growing the fiber backbone to reach the desired
+            length, and then growing the fiber laterally around the backbone points
+            to reach the desired width. The length grows in integer steps as
+            dictated by the rate argument. If the input length is not a multiple of
+            rate, it will be rounded down to the the next smallest divisible
+            integer. If a single integer is passed, all fibers will be assigned the
+            same length. If a pair of integers (a, b) is passed, the length of each
+            fiber will be variable and this input will specify the lower (a) and
+            upper (b) bounds of the possible lengths. The length of each fiber will
+            be selected randomly from within the range [a, b - 1], and then rounded
+            down to the next smallest integer divisible by the rate.
+        D (float):
+            A rotational diffusion constant that describes the evolution of the
+            angle that specifies the direction of longitudinal fiber growth. Larger
+            values result in rapid rotational diffusion and more fiber curvature,
+            while smaller values result in less rotational diffusion and more linear
+            fibers.
+        rate (int):
+            The rate of fiber growth during cluster deposition. A single integer
+            value that defines the euclidean distance between points in the fiber
+            backbone. The clustered_pts, length, and rate args all set the number of
+            points (density) deposited at each backbone point along the fibrillar
+            cluster, according to: density = round(pts / (length / rate)). Ensure
+            that the rounded integer for density is ≥ 1 to obtain a valid cluster.
+        method (str):
+            The method for growing fibrillar clusters laterally after setting the
+            fiber backbone. Keyword "random" distributes random uniform points
+            within a width = cluster_size centered around the backbone point, while
+            "normal" draws points from a random normal distribution with
+            standard deviation = cluster_size / 4, again centered around the point
+            defining the fiber backbone.
+        multi_emitter (Optional[float]):
+            An optional floating point value that allows the addition of multiple
+            localizations per point. After depositing all clustered and noise
+            points, multiple localizations are deposited around each initial point
+            within a region defined by its localization uncertainty, in order to
+            simulate multiple on/off cycles for a given molecule. The input value,
+            which should be > 1.0, specifies the mean of a Poisson distribution. The
+            number of localizations at each point is randomly drawn from this
+            distribution. If no input value is given, there will only be one
+            localization per molecule and the original positions of the deposited
+            points will not be modified.
+
+    Returns:
+        Tuple containing:
+            - Array of float coordinates with shape (N, d), where N is the total
+              number of points (clustered + noise) and d is the dimensionality of the
+              data.
+            - Array of integer labels with shape (N,) mapping to cluster assignments.
+              -1 indicates noise, while cluster labels are a set of consecutive
+              integers that span the range [0, num_clusters - 1].
+    """
+
     #First create the clusters
     X_clusts, label_list = deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate)     
     #Add noise to the data
@@ -21,8 +143,36 @@ def simulate_clusters(num_clusters, clustered_pts, cluster_size, noise_pts = 0, 
     return X_points_final, labels
 
     
-def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate):
+def deposit_clusters(
+    num_clusters: int,
+    clustered_pts: Union[int, Tuple[int, int]],
+    cluster_size: Union[int, Tuple[int, int]],
+    space: Tuple[int, int],
+    aspect_ratio: float,
+    min_sep: Optional[float],
+    cluster_shape: str,
+    fix_AR: bool,
+    method: str,
+    length: Union[int, Tuple[int, int]],
+    D: float,
+    rate: int
+) -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.int_]]:
+    """
+    Calls functions which deposit clustered points of a specific type in the
+    simlation grid.
     
+    Args:
+        See simulate_clusters() for a full description of args.
+
+    Returns:
+        Tuple containing:
+            - Array of float coordinates with shape (N, d), where N is the number of
+              clustered points and d is the dimensionality of the data.
+            - Array of integer labels of shape (N,) mapping to cluster assignments.
+              Labels are a set of consecutive integers that span the range
+              [0, num_clusters - 1].
+    """
+
     if min_sep == None:
         min_sep = 0.5 * np.max(cluster_size)
 
@@ -58,7 +208,29 @@ def deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ra
     X_clusters = np.vstack(X_temp_clusts)
     return X_clusters, np.hstack(label_list)
 
-def set_centers(num_clusters,space,min_sep, cluster_shape):
+def set_centers(
+    num_clusters: int,
+    space: Tuple[int, int],
+    min_sep: float,
+    cluster_shape: str
+) -> Tuple[npt.NDArray[np.int_], bool]:
+    """
+    Defines the centers of clusters before depositing clustered points,
+    ensuring that clusters are sufficiently spaced apart as specified by a
+    minimum separation distance.
+    
+    Args:
+        See simulate_clusters() for a full description of args.
+
+    Returns:
+        Tuple containing:
+            - Array of integer coordinates with shape (N, d), where N is the number of
+              clusters and d is the dimensionality of the data.
+            - Boolean indicating whether to terminate the execution of the simulation
+              if cluster centers could not be deposited according to the desired
+              minimum separation distance.
+    """
+
     terminate = False
     centers = [None]
     
@@ -100,7 +272,26 @@ def set_centers(num_clusters,space,min_sep, cluster_shape):
     return np.array(centers),terminate
 
 #Ensures centers are seperated by a defined distance
-def dist_check(test_centers,threshold):
+def dist_check(
+    test_centers: npt.NDArray[np.int_],
+    threshold: float
+) -> bool:
+    """
+    Ensures that cluster centers are farther apart than the input value
+    threshold (by euclidean distance) for set_centers().
+    
+    Args:
+        test_centers:
+            Array containing the proposed cluster centers.
+        threshold:
+            The euclidean distance that all cluster centers must be separated by to
+            be considered a valid set of placements.
+
+    Returns:
+        Boolean indicating whether the current set of centers meets (True) or
+        fails (False) the distance separation criterion.
+    """
+
     p_test = pairwise_distances(test_centers)
     placeholder = []
     for n,i in enumerate(p_test):
@@ -114,8 +305,36 @@ def dist_check(test_centers,threshold):
     
     return outcome
 
-def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR):
+def deposit_cluster_ellipse(
+    center: npt.NDArray[np.int_],
+    cluster_size: float,
+    aspect_ratio: float,
+    pts: int,
+    fix_AR: bool
+) -> npt.NDArray[np.float_]:
+    """
+    Deposit a single instance of a circlular or elliptical cluster.
     
+    Args:
+        center:
+            The center coordinate of the current cluster.
+        cluster_size:
+            The size of the current cluster. For ellipses and circles, this is the
+            apparent width of a normal distribution from which the clustered points
+            are drawn, which is defined here as standard deviation * 4.
+        aspect_ratio:
+            See simulate_clusters().
+        pts:
+            The number of points that will be deposited and assigned as belonging to
+            this cluster instance.
+        fix_AR:
+            See simulate_clusters().
+
+    Returns:
+        Array of float coordinates of shape (N, d), where N is the number of
+        points in this cluster instance and d is the dimensionality of the data.
+    """
+
     cluster_sd = cluster_size / 4
 
     if aspect_ratio < 1.0:
@@ -142,8 +361,37 @@ def deposit_cluster_ellipse(center, cluster_size, aspect_ratio, pts, fix_AR):
     return np.vstack((x,y)).T
 
 #Micelle clusters ***********************************
-def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
+def deposit_cluster_micelle(
+    center: npt.NDArray[np.int_],
+    cluster_size: float,
+    aspect_ratio: float,
+    pts: int,
+    fix_AR: bool
+) -> npt.NDArray[np.float_]:
+    """
+    Deposit a single instance of a micelle shaped cluster.
     
+    Args:
+        center:
+            The center coordinate of the current cluster.
+        cluster_size:
+            The size of the current cluster. For micelles, the size refers to the
+            outer diameter. Clustered points are drawn from a random uniform
+            distribution centered around the cluster center, such that the micelle
+            inner diameter = outer diameter * 2 / 3.
+        aspect_ratio:
+            See simulate_clusters().
+        pts:
+            The number of points that will be deposited and assigned as belonging to
+            this cluster instance.
+        fix_AR:
+            See simulate_clusters().
+
+    Returns:
+        Array of float coordinates of shape (N, d), where N is the number of
+        points in this cluster instance and d is the dimensionality of the data.
+    """
+
     if aspect_ratio < 1.0:
         raise ValueError(f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0.")
     else:
@@ -170,8 +418,46 @@ def deposit_cluster_micelle(center, cluster_size, aspect_ratio, pts, fix_AR):
     
     return np.vstack((x,y)).T
 
-def deposit_cluster_fiber(center, cluster_size, pts, length, D, rate, method):
+
+def deposit_cluster_fiber(
+    center: npt.NDArray[np.int_], 
+    cluster_size: float, 
+    pts: int, 
+    length: Union[int, Tuple[int, int]], 
+    D: float, 
+    rate: int, 
+    method: str
+) -> npt.NDArray[np.float_]:
+    """
+    Deposit a single instance of a fiber shaped cluster.
     
+    Args:
+        center:
+            The center coordinate for the fiber being deposited. The center
+            coordinate marks the midpoint of the fiber along the longitudinal
+            direction.
+        cluster_size:
+            The lateral width of the fiber, which is dependent on the method
+            argument. For method = "normal", the cluster_size is the the apparent
+            width of a random normal distribution centered around a fiber backbone
+            point, with standard deviation = cluster_size / 4. For
+            method = "random", the cluster_size is the width of a random uniform
+            distribution centered around the fiber backbone point.
+        pts:
+            The number of points that will be deposited and assigned as belonging to
+            this cluster instance.
+        D:
+            See simulate_clusters().
+        rate:
+            See simulate_clusters().
+        method:
+            See simulate_clusters().
+
+    Returns:
+        Array of float coordinates of shape (N, d), where N is the number of
+        points in this cluster instance and d is the dimensionality of the data.
+    """
+
     if type(length) == list:
         length = np.random.randint(length[0] // rate, length[1] // rate + 1, 1)[0] * rate
     else:
@@ -240,7 +526,31 @@ def deposit_cluster_fiber(center, cluster_size, pts, length, D, rate, method):
     
     return np.vstack((np.hstack(x), np.hstack(y))).T    
     
-def deposit_cluster_sphere(center, cluster_size, pts):
+def deposit_cluster_sphere(
+    center: npt.NDArray[np.int_], 
+    cluster_size: float, 
+    pts: int
+) -> npt.NDArray[np.float_]:
+    """
+    Deposit a single instance of a 3D spherical cluster.
+    
+    Args:
+        center:
+            The center coordinate of the current cluster.
+        cluster_size:
+            For spherical clusters, the cluster_size is the apparent width of the
+            cluster in lateral and axial directions. In both cases, this width
+            corresponds to 4 * standard deviation of the underlying normal
+            distribution from which clustered points are drawn.
+        pts:
+            The number of points that will be deposited and assigned as belonging to
+            this cluster instance.
+
+    Returns:
+        Array of float coordinates of shape (N, d), where N is the number of
+        points in this cluster instance and d is the dimensionality of the data.
+    """
+
     cluster_sd = cluster_size/4
     x = np.random.normal(loc=center[0],scale=cluster_sd,size=int(pts))
     y = np.random.normal(loc=center[1],scale=cluster_sd,size=int(pts))
@@ -251,7 +561,38 @@ def deposit_cluster_sphere(center, cluster_size, pts):
 
 
 # Pts unassigned to any clusters added to the space
-def add_noise_pts(X_coords, noise_pts, space, cluster_shape, gradient = False):
+def add_noise_pts(
+    X_coords: npt.NDArray[np.float_], 
+    noise_pts: int, 
+    space: Tuple[int, int], 
+    cluster_shape: str, 
+    gradient: bool
+) -> npt.NDArray[np.float_]:
+    """
+    Add noise points to the simulation grid after depositing clustered points.
+    
+    Args:
+        X_coords:
+            Coordinates of all points belonging to clusters that have already been
+            deposited by cluster deposition functions.
+        noise_pts:
+            See simulate_clusters().
+        space:
+            See simulate_clusters().
+        cluster_shape:
+            The type of cluster: "circle", "ellipse", "micelle", "fiber", or
+            "sphere" as described in simulate_clusters(). Noise deposition only
+            depends on the dimensionality of the data. For "sphere", noise points
+            are deposited in 3-dimensions, while for all other cluster shapes points
+            are deposited in 2-dimensions.
+        gradient:
+            See simulate_clusters().
+
+    Returns:
+        Array of float coordinates with shape (N, d) where N is the number of
+        noise points deposited and d is the dimensionality of the data.
+    """
+
     pts = int(noise_pts)
     space_min_coords = np.min(X_coords)
     space_max_coords = np.max(X_coords)
@@ -299,9 +640,55 @@ def add_noise_pts(X_coords, noise_pts, space, cluster_shape, gradient = False):
 # coords in the nx2 or nx3 points array
 # default behavior is no z (precision arrays set to None)
 # conditional execution of the z dim requires both mean and sigma for the axial to not be None-type
-def add_uncertainty(coords, label_pad, multi_emitter, mean_lat_prec, sigma_lat_prec,
-                    mean_ax_prec=None, sigma_ax_prec=None):
-   
+def add_uncertainty(
+    coords: npt.NDArray[np.float_], 
+    label_pad: npt.NDArray[np.float_], 
+    multi_emitter: Optional[float], 
+    mean_lat_prec: float, 
+    sigma_lat_prec: float,
+    mean_ax_prec: Optional[float] = None, 
+    sigma_ax_prec: Optional[float] = None
+) -> Tuple[npt.NDArray[np.float_], npt.NDArray[np.int_]]:
+    """
+    Applies localization uncertainty to each coordinate. Also adds
+    localizations to simulate multi-emitter behavior if desired.
+    
+    Args:
+        coords:
+            Coordinates of all points (both noise and belonging to clusters) in the
+            simulation grid.
+        label_pad:
+            The labels assigning points to clusters/noise.
+        multi_emitter:
+            See simulate_clusters().
+        mean_lat_prec:
+            The mean of the lognormal distribution describing the lateral
+            uncertainty from which individual localization uncertainties are drawn, 
+            passed from precision_params.
+        sigma_lat_prec:
+            The standard deviation of the lognormal distribution describing the
+            lateral uncertainty from which individual localization uncertainties are
+            drawn, passed from precision_params.
+        mean_ax_prec:
+            The mean of the lognormal distribution describing the axial uncertainty
+            from which individual localization uncertainties are drawn, passed from
+            precision_params.
+        sigma_ax_prec:
+            The standard deviation of the lognormal distribution describing the
+            axial uncertainty from which individual localization uncertainties are
+            drawn, passed from precision_params.
+
+    Returns:
+        Tuple containing:
+            - Array of float coordinates with shape (N, d) where N is the total number
+              of points in the simulation grid after applying localization uncertainty
+              and optional multi emitter adjustments, and d is the dimensionality of
+              the data.
+            - Array of integer labels with shape (N,) where N is the total number of
+              points in the simulation grid after applying uncertainty and optional 
+              multi emitter adjustments.
+    """
+
     num_points = coords.shape[0]
 
     # Generate the lateral precisions
