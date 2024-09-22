@@ -23,7 +23,11 @@ def plot_clusters(
         None.
     """
 
-    clusterIDSplit = np.where(np.diff(labels))[0] 
+    try:
+        clusterIDSplit = np.where(np.diff(labels))[0] 
+    except ValueError as e:
+        return
+        
     clustergroups = np.split(X, clusterIDSplit + 1)
     
     if X.shape[-1] == 2:
