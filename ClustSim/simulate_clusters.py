@@ -4,6 +4,7 @@ from sklearn.metrics import pairwise_distances
 from typing import List, Tuple, Union, Optional
 import numpy.typing as npt
 
+
 def simulate_clusters(
     num_clusters: int, 
     clustered_pts: Union[int, Tuple[int, int]], 
@@ -14,7 +15,8 @@ def simulate_clusters(
     cluster_shape: str = 'circle', 
     aspect_ratio: float = 1.0, 
     fix_AR: bool = True, 
-    precision_params: Union[Tuple[float, float], Tuple[float, float, float, float]] = (0.0, 0.0), 
+    precision_params: Union[Tuple[float, float],
+                            Tuple[float, float, float, float]] = (0.0, 0.0), 
     min_sep: Optional[float] = None, 
     length: Union[int, Tuple[int, int]] = 300, 
     D: float = 0.01, 
@@ -65,7 +67,8 @@ def simulate_clusters(
             elliptical and micellular clusters. If False, aspect ratios will be
             randomly assigned to each cluster by random uniform selection in the
             range [1.0, aspect_ratio), as specified by the aspect_ratio argument.
-        precision_params (Union[Tuple[float, float], Tuple[float, float, float, float]]):
+        precision_params (Union[Tuple[float, float],
+                                Tuple[float, float, float, float]]):
             The mean and standard deviation of the lognormal distribution from which
             localization uncertainties will be drawn, passed as (mean, stdev). For
             3D data, parameters should be specified for both lateral and axial
@@ -130,15 +133,29 @@ def simulate_clusters(
               integers that span the range [0, num_clusters - 1].
     """
 
-    #First create the clusters
-    X_clusts, label_list = deposit_clusters(num_clusters, clustered_pts, cluster_size, space, aspect_ratio, min_sep, cluster_shape, fix_AR, method, length, D, rate)     
-    #Add noise to the data
-    X_noise = add_noise_pts(X_clusts, noise_pts, space, cluster_shape, gradient)
-    label_pad = np.pad(label_list, (0, len(X_noise)), 'constant', constant_values = -1)
-    #Reshape the data to output Cluster,Noise, and labels
-    X_points = np.vstack((X_clusts,X_noise))
+    # Create the clusters with the specified parameters
+    X_clusts, label_list = deposit_clusters(
+        num_clusters, clustered_pts, cluster_size, space, aspect_ratio,
+        min_sep, cluster_shape, fix_AR, method, length, D, rate
+    )
+
+    # Add noise points after depositing clusters
+    X_noise = add_noise_pts(
+        X_clusts, noise_pts, space, cluster_shape, gradient
+    )
+
+    # Add noise labels to the labels array
+    label_pad = np.pad(
+        label_list, (0, len(X_noise)), 'constant', constant_values = -1
+    )
+
+    # Combine cluster and noise points into a single array
+    X_points = np.vstack((X_clusts, X_noise))
     
-    X_points_final, labels = add_uncertainty(X_points, label_pad,  multi_emitter,  *precision_params)
+    # Apply uncertainty and multi emitter correction to all points
+    X_points_final, labels = add_uncertainty(
+        X_points, label_pad,  multi_emitter,  *precision_params
+    )
     
     return X_points_final, labels
 
@@ -176,37 +193,46 @@ def deposit_clusters(
     if min_sep == None:
         min_sep = 0.5 * np.max(cluster_size)
 
-    centers,cond = set_centers(num_clusters,space,min_sep, cluster_shape)
+    centers,cond = set_centers(num_clusters, space, min_sep, cluster_shape)
+
     if cond==True:
         print('Failed')
         return None
+
     pts = clustered_pts
     cluster_width = cluster_size
     X_temp_clusts = []
     label_list = []
     for i in range(num_clusters):
         if type(cluster_size) == list:
-            cluster_width = np.random.randint(cluster_size[0], cluster_size[1]+1, 1)
-        if type(clustered_pts) ==list:
-            pts = np.random.randint(clustered_pts[0],clustered_pts[1]+1, 1)
+            cluster_width = np.random.randint(cluster_size[0], cluster_size[1] + 1, 1)
+        if type(clustered_pts) == list:
+            pts = np.random.randint(clustered_pts[0], clustered_pts[1] + 1, 1)
 
         if cluster_shape == 'circle':
             X_temp = deposit_cluster_ellipse(centers[i], cluster_width, 1.0, pts, True)
         elif cluster_shape == 'ellipse':
-            X_temp = deposit_cluster_ellipse(centers[i], cluster_width, aspect_ratio, pts, fix_AR)
+            X_temp = deposit_cluster_ellipse(
+                centers[i], cluster_width, aspect_ratio, pts, fix_AR
+            )
         elif cluster_shape == 'micelle':
-            X_temp = deposit_cluster_micelle(centers[i], cluster_width, aspect_ratio, pts, fix_AR)
+            X_temp = deposit_cluster_micelle(
+                centers[i], cluster_width, aspect_ratio, pts, fix_AR
+            )
         elif cluster_shape == 'fiber':
-            X_temp = deposit_cluster_fiber(centers[i], cluster_width, pts, length, D, rate, method)
+            X_temp = deposit_cluster_fiber(
+                centers[i], cluster_width, pts, length, D, rate, method
+            )
         elif cluster_shape == 'sphere':
-            X_temp = deposit_cluster_sphere(centers[i], cluster_width, pts)   
+            X_temp = deposit_cluster_sphere(centers[i], cluster_width, pts)
             
         label_list.append(np.full(len(X_temp),i))   
         X_temp_clusts.append(X_temp)
     
-    
     X_clusters = np.vstack(X_temp_clusts)
+
     return X_clusters, np.hstack(label_list)
+
 
 def set_centers(
     num_clusters: int,
@@ -235,43 +261,57 @@ def set_centers(
     centers = [None]
     
     if cluster_shape == 'sphere':
-        centers[0] = [np.random.randint(low=space[0]+1,high=space[1]),np.random.randint(low=space[0]+1,high=space[1]), np.random.randint(low=space[0]+1,high=space[1])]
+        centers[0] = [
+            np.random.randint(low=space[0] + 1, high=space[1]),
+            np.random.randint(low=space[0] + 1, high=space[1]),
+            np.random.randint(low=space[0] + 1, high=space[1])
+        ]
         count = 1
         iterations = 0
-        while count<num_clusters:
-            centers.append([np.random.randint(low=space[0]+1,high=space[1]),np.random.randint(low=space[0]+1,high=space[1]), np.random.randint(low=space[0]+1,high=space[1])])
-            dist_c = dist_check(np.array(centers),min_sep)
-            if dist_c==True:
-                count+=1
-                iterations+=1
+        while count < num_clusters:
+            centers.append([
+                np.random.randint(low=space[0] + 1, high=space[1]),
+                np.random.randint(low=space[0] + 1, high=space[1]),
+                np.random.randint(low=space[0] + 1, high=space[1])
+            ])
+            dist_c = dist_check(np.array(centers), min_sep)
+            if dist_c == True:
+                count += 1
+                iterations += 1
             else:
                 centers.pop()
-                iterations+=1
-                if iterations>50000:
-                    terminate=True
+                iterations += 1
+                if iterations > 50000:
+                    terminate = True
                     print('Distance between clusters is too restrictive')
                     break
     else:
-        centers[0] = [np.random.randint(low=space[0]+1,high=space[1]),np.random.randint(low=space[0]+1,high=space[1])]
+        centers[0] = [
+            np.random.randint(low=space[0]+1,high=space[1]),
+            np.random.randint(low=space[0]+1,high=space[1])
+        ]
         count = 1
         iterations = 0
-        while count<num_clusters:
-            centers.append([np.random.randint(low=space[0]+1,high=space[1]),np.random.randint(low=space[0]+1,high=space[1])])
-            dist_c = dist_check(np.array(centers),min_sep)
-            if dist_c==True:
-                count+=1
-                iterations+=1
+        while count < num_clusters:
+            centers.append([
+                np.random.randint(low=space[0]+1,high=space[1]),
+                np.random.randint(low=space[0]+1,high=space[1])
+            ])
+            dist_c = dist_check(np.array(centers), min_sep)
+            if dist_c == True:
+                count += 1
+                iterations += 1
             else:
                 centers.pop()
-                iterations+=1
-                if iterations>50000:
-                    terminate=True
+                iterations += 1
+                if iterations > 50000:
+                    terminate = True
                     print('Distance between clusters is too restrictive')
                     break
 
-    return np.array(centers),terminate
+    return np.array(centers), terminate
 
-#Ensures centers are seperated by a defined distance
+
 def dist_check(
     test_centers: npt.NDArray[np.int_],
     threshold: float
@@ -295,15 +335,16 @@ def dist_check(
     p_test = pairwise_distances(test_centers)
     placeholder = []
     for n,i in enumerate(p_test):
-        placeholder.append(np.delete(i,n))
+        placeholder.append(np.delete(i, n))
         
     placeholder = np.array(placeholder)
-    if np.where(placeholder<threshold)[0].size>0:
+    if np.where(placeholder < threshold)[0].size > 0:
         outcome = False
     else:
         outcome = True
     
     return outcome
+
 
 def deposit_cluster_ellipse(
     center: npt.NDArray[np.int_],
@@ -338,7 +379,9 @@ def deposit_cluster_ellipse(
     cluster_sd = cluster_size / 4
 
     if aspect_ratio < 1.0:
-        raise ValueError(f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0.")
+        raise ValueError(
+            f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0."
+        )
     else:
         if fix_AR == True:
             elongation = cluster_sd * aspect_ratio
@@ -352,13 +395,21 @@ def deposit_cluster_ellipse(
     x = []
     y = []
     for j in range(len(x_hold)):
-        x_hold_rot = ((x_hold[j]-center[0])*(math.cos(theta_rot)))-((y_hold[j]-center[1])*(math.sin(theta_rot)))+center[0]
-        y_hold_rot = ((x_hold[j]-center[0])*(math.sin(theta_rot)))+((y_hold[j]-center[1])*(math.cos(theta_rot)))+center[1]
+        x_hold_rot = (
+            ((x_hold[j] - center[0]) * (math.cos(theta_rot)))
+            - ((y_hold[j] - center[1]) * (math.sin(theta_rot)))
+            + center[0]
+        )
+        y_hold_rot = (
+            ((x_hold[j] - center[0]) * (math.sin(theta_rot)))
+            + ((y_hold[j] - center[1]) * (math.cos(theta_rot)))
+            + center[1]
+        )
         x.append(x_hold_rot)
         y.append(y_hold_rot)
        
     
-    return np.vstack((x,y)).T
+    return np.vstack((x, y)).T
 
 #Micelle clusters ***********************************
 def deposit_cluster_micelle(
@@ -393,30 +444,40 @@ def deposit_cluster_micelle(
     """
 
     if aspect_ratio < 1.0:
-        raise ValueError(f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0.")
+        raise ValueError(
+            f"aspect_ratio = {aspect_ratio} is invalid, input values must be ≥ 1.0."
+        )
     else:
         if fix_AR == True:
             elongation = aspect_ratio
         else:
             elongation = np.random.uniform(1, aspect_ratio)
             
-    R = cluster_size/2
-    theta_inner = np.random.uniform(0,2*np.pi, pts)
-    radius = np.random.uniform(R/1.5,R, pts)
-    x_hold = (radius * (np.cos(theta_inner)*elongation))+center[0]
-    y_hold = (radius * np.sin(theta_inner))+center[1]
+    R = cluster_size / 2
+    theta_inner = np.random.uniform(0, 2 * np.pi, pts)
+    radius = np.random.uniform(R / 1.5, R, pts)
+    x_hold = (radius * np.cos(theta_inner) * elongation) + center[0]
+    y_hold = (radius * np.sin(theta_inner)) + center[1]
     
-    theta_rot = np.random.uniform(0,(2*np.pi))
+    theta_rot = np.random.uniform(0, 2 * np.pi)
     x = []
     y = []
     for j in range(len(x_hold)):
-        x_rot = ((x_hold[j]-center[0])*(math.cos(theta_rot)))-((y_hold[j]-center[1])*(math.sin(theta_rot)))+center[0]
-        y_rot = ((x_hold[j]-center[0])*(math.sin(theta_rot)))+((y_hold[j]-center[1])*(math.cos(theta_rot)))+center[1]
+        x_rot = (
+            ((x_hold[j] - center[0]) * (math.cos(theta_rot))) 
+            - ((y_hold[j] - center[1]) * (math.sin(theta_rot))) 
+            + center[0]
+        )
+        y_rot = (
+            ((x_hold[j] - center[0]) * (math.sin(theta_rot)))
+            + ((y_hold[j] - center[1]) * (math.cos(theta_rot)))
+            + center[1]
+        )
         x.append(x_rot)
         y.append(y_rot)
         
     
-    return np.vstack((x,y)).T
+    return np.vstack((x, y)).T
 
 
 def deposit_cluster_fiber(
@@ -459,7 +520,9 @@ def deposit_cluster_fiber(
     """
 
     if type(length) == list:
-        length = np.random.randint(length[0] // rate, length[1] // rate + 1, 1)[0] * rate
+        length = (
+            np.random.randint(length[0] // rate, length[1] // rate + 1, 1)[0] * rate
+        )
     else:
         length = (length // rate) * rate
     
@@ -502,11 +565,17 @@ def deposit_cluster_fiber(
     else:
         frame_center_a = fiber_frame[int((frame_pts / 2) - 0.5)]
         frame_center_b = fiber_frame[int((frame_pts / 2) + 0.5)]
-        frame_center = [(frame_center_a[0] + frame_center_b[0]) / 2, (frame_center_a[1] + frame_center_b[1]) / 2]
+        frame_center = [
+            (frame_center_a[0] + frame_center_b[0]) / 2,
+            (frame_center_a[1] + frame_center_b[1]) / 2
+        ]
 
     x_shift_center = center[0] - frame_center[0]
     y_shift_center = center[1] - frame_center[1]
-    fiber_frame_recenter = np.vstack((fiber_frame[:,0] + x_shift_center, fiber_frame[:,1] + y_shift_center)).T
+    fiber_frame_recenter = np.vstack((
+        fiber_frame[:,0] + x_shift_center,
+        fiber_frame[:,1] + y_shift_center
+    )).T
         
     x = []
     y = []
@@ -517,8 +586,12 @@ def deposit_cluster_fiber(
             y_hold = np.random.normal(i[1], cluster_size / 4, density)
         elif method == 'random': 
             # randomly distributed points
-            x_hold = np.random.uniform(i[0] - (cluster_size / 2), i[0] + (cluster_size / 2), density)
-            y_hold = np.random.uniform(i[1] - (cluster_size / 2), i[1] + (cluster_size / 2), density)
+            x_hold = np.random.uniform(
+                i[0] - (cluster_size / 2), i[0] + (cluster_size / 2), density
+            )
+            y_hold = np.random.uniform(
+                i[1] - (cluster_size / 2), i[1] + (cluster_size / 2), density
+            )
             
         x.append(x_hold)
         y.append(y_hold)
@@ -551,10 +624,10 @@ def deposit_cluster_sphere(
         points in this cluster instance and d is the dimensionality of the data.
     """
 
-    cluster_sd = cluster_size/4
-    x = np.random.normal(loc=center[0],scale=cluster_sd,size=int(pts))
-    y = np.random.normal(loc=center[1],scale=cluster_sd,size=int(pts))
-    z = np.random.normal(loc=center[2],scale=cluster_sd,size=int(pts))
+    cluster_sd = cluster_size / 4
+    x = np.random.normal(loc=center[0], scale=cluster_sd, size=int(pts))
+    y = np.random.normal(loc=center[1], scale=cluster_sd, size=int(pts))
+    z = np.random.normal(loc=center[2], scale=cluster_sd, size=int(pts))
     
     return np.vstack((x,y,z)).T  
 
@@ -606,34 +679,43 @@ def add_noise_pts(
         space_max = space[1]
     
     if cluster_shape == 'sphere':
-        X_noise = np.array([np.random.uniform(space_min, space_max, size=pts),
-                            np.random.uniform(space_min, space_max, size=pts), 
-                            np.random.uniform(space_min, space_max, size=pts)])
-        return(X_noise.T)
+        X_noise = np.array([
+            np.random.uniform(space_min, space_max, size=pts),
+            np.random.uniform(space_min, space_max, size=pts), 
+            np.random.uniform(space_min, space_max, size=pts)
+        ])
+        
+        return X_noise.T
     else:    
         if gradient:
             total_space = space_max - space_min
-            space_jump = total_space/10
+            space_jump = total_space / 10
             noise_pts_set = []
             total_noise_pts = []
             for i in range(10):
                 if i == 9:
-                    space_pts = int(pts-np.sum(total_noise_pts))
+                    space_pts = int(pts - np.sum(total_noise_pts))
                 else:
-                    space_pts = int((.042553 + (i*0.0127659)) * pts)
+                    space_pts = int((0.042553 + (i * 0.0127659)) * pts)
                     total_noise_pts.append(space_pts)
 
-                low_x = int(i*space_jump)+space_min
-                high_x = int((i*space_jump) + space_jump)+space_min
-                noise_section = np.array([np.random.uniform(low_x, high_x, size = space_pts), 
-                                          np.random.uniform(space_min, space_max, size = space_pts)])
+                low_x = int(i * space_jump) + space_min
+                high_x = int((i * space_jump) + space_jump) + space_min
+                noise_section = np.array([
+                                    np.random.uniform(low_x, high_x, size=space_pts), 
+                                    np.random.uniform(space_min, space_max, size=space_pts)
+                                ])
                 noise_pts_set.append(noise_section.T)
 
             X_noise = np.vstack(noise_pts_set)
+
             return X_noise
         else:
-            X_noise = np.array([np.random.uniform(space_min,space_max,size=pts),
-                                np.random.uniform(space_min,space_max,size=pts)])
+            X_noise = np.array([
+                np.random.uniform(space_min,space_max,size=pts),
+                np.random.uniform(space_min,space_max,size=pts)
+            ])
+
             return X_noise.T
         
 
@@ -692,11 +774,17 @@ def add_uncertainty(
     num_points = coords.shape[0]
 
     # Generate the lateral precisions
-    lateral_prec = np.random.lognormal(mean=mean_lat_prec, sigma=sigma_lat_prec, size=num_points) / 2.355
+    lateral_prec = (
+        np.random.lognormal(mean=mean_lat_prec, sigma=sigma_lat_prec, size=num_points)
+        / 2.355
+    )
 
     # Generate the axial positions if needed
     if mean_ax_prec and sigma_ax_prec:
-        axial_prec = np.random.lognormal(mean=mean_ax_prec, sigma=sigma_ax_prec, size=num_points) / 2.355
+        axial_prec = (
+            np.random.lognormal(mean=mean_ax_prec, sigma=sigma_ax_prec, size=num_points) 
+            / 2.355
+        )
    
     x_ns = []
     y_ns = []
@@ -706,7 +794,7 @@ def add_uncertainty(
         multi_emitters_list = np.full(num_points, 1)
         labels = label_pad
     else:
-        multi_emitters_list = np.random.poisson(lam = multi_emitter, size = num_points)
+        multi_emitters_list = np.random.poisson(lam=multi_emitter, size=num_points)
         labels_out = []
         for i in range(len(label_pad)):
             labels_out.append(np.full(multi_emitters_list[i], label_pad[i]))
