@@ -194,7 +194,7 @@ def deposit_clusters(
               [0, num_clusters - 1].
     """
 
-    if min_sep == None:
+    if min_sep is None:
         min_sep = 0.5 * np.max(cluster_size)
 
     centers,cond = set_centers(num_clusters, space, min_sep, cluster_shape)
