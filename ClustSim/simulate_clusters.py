@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from sklearn.metrics import pairwise_distances
+from collections.abc import Sequence
 from typing import List, Tuple, Union, Optional
 import numpy.typing as npt
 
@@ -207,10 +208,14 @@ def deposit_clusters(
     cluster_width = cluster_size
     X_temp_clusts = []
     label_list = []
+
+    is_clustered_pts_seq = isinstance(clustered_pts, Sequence)
+    is_cluster_size_seq = isinstance(cluster_size, Sequence)
+
     for i in range(num_clusters):
-        if type(cluster_size) == list:
+        if is_cluster_size_seq:
             cluster_width = np.random.randint(cluster_size[0], cluster_size[1] + 1, 1)
-        if type(clustered_pts) == list:
+        if is_clustered_pts_seq:
             pts = np.random.randint(clustered_pts[0], clustered_pts[1] + 1, 1)
 
         if cluster_shape == 'circle':
@@ -521,7 +526,7 @@ def deposit_cluster_fiber(
         points in this cluster instance and d is the dimensionality of the data.
     """
 
-    if type(length) == list:
+    if isinstance(length, Sequence):
         length = (
             np.random.randint(length[0] // rate, length[1] // rate + 1, 1)[0] * rate
         )
