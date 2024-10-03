@@ -11,11 +11,11 @@ def plot_clusters(
     the labels passed to the function.
     
     Args:
-        X:
+        X (npt.NDArray[np.float_]):
             Array of float coordinates containing all points, both noise and
             clustered. The array will have shape (N, d), where N is the number of
             total points and d is the dimensionality of the data.
-        labels:
+        labels (npt.NDArray[np.int_]): 
             Array of integer labels assigning points to clusters or noise of shape
             (N,), where N is the total number of points.
 
