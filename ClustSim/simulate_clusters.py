@@ -330,9 +330,9 @@ def dist_check(
     threshold (by euclidean distance) for set_centers().
     
     Args:
-        test_centers:
+        test_centers (npt.NDArray[np.int_]):
             Array containing the proposed cluster centers.
-        threshold:
+        threshold (float):
             The euclidean distance that all cluster centers must be separated by to
             be considered a valid set of placements.
 
@@ -366,18 +366,18 @@ def deposit_cluster_ellipse(
     Deposit a single instance of a circlular or elliptical cluster.
     
     Args:
-        center:
+        center (npt.NDArray[np.int_]):
             The center coordinate of the current cluster.
-        cluster_size:
+        cluster_size (float):
             The size of the current cluster. For ellipses and circles, this is the
             apparent width of a normal distribution from which the clustered points
             are drawn, which is defined here as standard deviation * 4.
-        aspect_ratio:
+        aspect_ratio (float):
             See simulate_clusters().
-        pts:
+        pts (int):
             The number of points that will be deposited and assigned as belonging to
             this cluster instance.
-        fix_AR:
+        fix_AR (bool):
             See simulate_clusters().
 
     Returns:
@@ -433,19 +433,19 @@ def deposit_cluster_micelle(
     Deposit a single instance of a micelle shaped cluster.
     
     Args:
-        center:
+        center (npt.NDArray[np.int_]):
             The center coordinate of the current cluster.
-        cluster_size:
+        cluster_size (float):
             The size of the current cluster. For micelles, the size refers to the
             outer diameter. Clustered points are drawn from a random uniform
             distribution centered around the cluster center, such that the micelle
             inner diameter = outer diameter * 2 / 3.
-        aspect_ratio:
+        aspect_ratio (float):
             See simulate_clusters().
-        pts:
+        pts (int):
             The number of points that will be deposited and assigned as belonging to
             this cluster instance.
-        fix_AR:
+        fix_AR (bool):
             See simulate_clusters().
 
     Returns:
@@ -504,25 +504,25 @@ def deposit_cluster_fiber(
     Deposit a single instance of a fiber shaped cluster.
     
     Args:
-        center:
+        center (npt.NDArray[np.int_]):
             The center coordinate for the fiber being deposited. The center
             coordinate marks the midpoint of the fiber along the longitudinal
             direction.
-        cluster_size:
+        cluster_size (float):
             The lateral width of the fiber, which is dependent on the method
             argument. For method = "normal", the cluster_size is the the apparent
             width of a random normal distribution centered around a fiber backbone
             point, with standard deviation = cluster_size / 4. For
             method = "random", the cluster_size is the width of a random uniform
             distribution centered around the fiber backbone point.
-        pts:
+        pts (int):
             The number of points that will be deposited and assigned as belonging to
             this cluster instance.
-        D:
+        D (float):
             See simulate_clusters().
-        rate:
+        rate (int):
             See simulate_clusters().
-        method:
+        method (str):
             See simulate_clusters().
 
     Returns:
@@ -621,14 +621,14 @@ def deposit_cluster_sphere(
     Deposit a single instance of a 3D spherical cluster.
     
     Args:
-        center:
+        center (npt.NDArray[np.int_]):
             The center coordinate of the current cluster.
-        cluster_size:
+        cluster_size (float):
             For spherical clusters, the cluster_size is the apparent width of the
             cluster in lateral and axial directions. In both cases, this width
             corresponds to 4 * standard deviation of the underlying normal
             distribution from which clustered points are drawn.
-        pts:
+        pts (int):
             The number of points that will be deposited and assigned as belonging to
             this cluster instance.
 
@@ -657,20 +657,20 @@ def add_noise_pts(
     Add noise points to the simulation grid after depositing clustered points.
     
     Args:
-        X_coords:
+        X_coords (npt.NDArray[np.float_]):
             Coordinates of all points belonging to clusters that have already been
             deposited by cluster deposition functions.
-        noise_pts:
+        noise_pts (int):
             See simulate_clusters().
-        space:
+        space (Tuple[int, int]):
             See simulate_clusters().
-        cluster_shape:
+        cluster_shape (str):
             The type of cluster: "circle", "ellipse", "micelle", "fiber", or
             "sphere" as described in simulate_clusters(). Noise deposition only
             depends on the dimensionality of the data. For "sphere", noise points
             are deposited in 3-dimensions, while for all other cluster shapes points
             are deposited in 2-dimensions.
-        gradient:
+        gradient (bool):
             See simulate_clusters().
 
     Returns:
@@ -734,7 +734,7 @@ def add_noise_pts(
 
 def add_uncertainty(
     coords: npt.NDArray[np.float_], 
-    label_pad: npt.NDArray[np.float_], 
+    label_pad: npt.NDArray[np.int_], 
     multi_emitter: Optional[float], 
     mean_lat_prec: float, 
     sigma_lat_prec: float,
@@ -746,26 +746,26 @@ def add_uncertainty(
     localizations to simulate multi-emitter behavior if desired.
     
     Args:
-        coords:
+        coords (npt.NDArray[np.float_]):
             Coordinates of all points (both noise and belonging to clusters) in the
             simulation grid.
-        label_pad:
+        label_pad (npt.NDArray[np.int_]):
             The labels assigning points to clusters/noise.
-        multi_emitter:
+        multi_emitter (Optional[float]):
             See simulate_clusters().
-        mean_lat_prec:
+        mean_lat_prec (float):
             The mean of the lognormal distribution describing the lateral
             uncertainty from which individual localization uncertainties are drawn, 
             passed from precision_params.
-        sigma_lat_prec:
+        sigma_lat_prec (float):
             The standard deviation of the lognormal distribution describing the
             lateral uncertainty from which individual localization uncertainties are
             drawn, passed from precision_params.
-        mean_ax_prec:
+        mean_ax_prec (Optional[float]):
             The mean of the lognormal distribution describing the axial uncertainty
             from which individual localization uncertainties are drawn, passed from
             precision_params.
-        sigma_ax_prec:
+        sigma_ax_prec (Optional[float]):
             The standard deviation of the lognormal distribution describing the
             axial uncertainty from which individual localization uncertainties are
             drawn, passed from precision_params.
