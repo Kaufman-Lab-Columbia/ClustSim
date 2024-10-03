@@ -126,12 +126,12 @@ def simulate_clusters(
 
     Returns:
         Tuple containing:
-            - Array of float coordinates with shape (N, d), where N is the total
-              number of points (clustered + noise) and d is the dimensionality of the
-              data.
-            - Array of integer labels with shape (N,) mapping to cluster assignments.
-              -1 indicates noise, while cluster labels are a set of consecutive
-              integers that span the range [0, num_clusters - 1].
+            - npt.NDArray[np.float_]: Array of float coordinates with shape (N, d),
+              where N is the total number of points (clustered + noise) and d is the
+              dimensionality of the data.
+            - npt.NDArray[np.int_]: Array of integer labels with shape (N,) mapping to
+              cluster assignments. -1 indicates noise, while cluster labels are a set
+              of consecutive integers that span the range [0, num_clusters - 1].
     """
 
     # Create the clusters with the specified parameters
@@ -188,11 +188,12 @@ def deposit_clusters(
 
     Returns:
         Tuple containing:
-            - Array of float coordinates with shape (N, d), where N is the number of
-              clustered points and d is the dimensionality of the data.
-            - Array of integer labels of shape (N,) mapping to cluster assignments.
-              Labels are a set of consecutive integers that span the range
-              [0, num_clusters - 1].
+            - npt.NDArray[np.float_]: Array of float coordinates with shape (N, d),
+              where N is the number of clustered points and d is the dimensionality of
+              the data.
+            - npt.NDArray[np.int_]: Array of integer labels of shape (N,) mapping to
+              cluster assignments. Labels are a set of consecutive integers that span
+              the range [0, num_clusters - 1].
     """
 
     if min_sep is None:
@@ -259,11 +260,12 @@ def set_centers(
 
     Returns:
         Tuple containing:
-            - Array of integer coordinates with shape (N, d), where N is the number of
-              clusters and d is the dimensionality of the data.
-            - Boolean indicating whether to terminate the execution of the simulation
-              if cluster centers could not be deposited according to the desired
-              minimum separation distance.
+            - npt.NDArray[np.int_]: Array of integer coordinates with shape (N, d),
+              where N is the number of clusters and d is the dimensionality of the
+              data.
+            - bool: Indicates whether to terminate the execution of the simulation if
+              cluster centers could not be deposited according to the desired minimum
+              separation distance.
     """
 
     terminate = False
@@ -335,8 +337,8 @@ def dist_check(
             be considered a valid set of placements.
 
     Returns:
-        Boolean indicating whether the current set of centers meets (True) or
-        fails (False) the distance separation criterion.
+         - bool: Indicates whether the current set of centers meets (True) or fails
+           (False) the distance separation criterion.
     """
 
     p_test = pairwise_distances(test_centers)
@@ -379,8 +381,9 @@ def deposit_cluster_ellipse(
             See simulate_clusters().
 
     Returns:
-        Array of float coordinates of shape (N, d), where N is the number of
-        points in this cluster instance and d is the dimensionality of the data.
+        - npt.NDArray[np.float_]: Array of float coordinates of shape (N, d),
+          where N is the number of points in this cluster instance and d is the
+          dimensionality of the data.
     """
 
     cluster_sd = cluster_size / 4
@@ -418,7 +421,7 @@ def deposit_cluster_ellipse(
     
     return np.vstack((x, y)).T
 
-#Micelle clusters ***********************************
+
 def deposit_cluster_micelle(
     center: npt.NDArray[np.int_],
     cluster_size: float,
@@ -446,8 +449,9 @@ def deposit_cluster_micelle(
             See simulate_clusters().
 
     Returns:
-        Array of float coordinates of shape (N, d), where N is the number of
-        points in this cluster instance and d is the dimensionality of the data.
+        - npt.NDArray[np.float_]: Array of float coordinates of shape (N, d),
+          where N is the number of points in this cluster instance and d is the
+          dimensionality of the data.
     """
 
     if aspect_ratio < 1.0:
@@ -522,8 +526,9 @@ def deposit_cluster_fiber(
             See simulate_clusters().
 
     Returns:
-        Array of float coordinates of shape (N, d), where N is the number of
-        points in this cluster instance and d is the dimensionality of the data.
+        - npt.NDArray[np.float_]: Array of float coordinates of shape (N, d),
+          where N is the number of points in this cluster instance and d is the
+          dimensionality of the data.
     """
 
     if isinstance(length, Sequence):
@@ -606,6 +611,7 @@ def deposit_cluster_fiber(
     
     return np.vstack((np.hstack(x), np.hstack(y))).T    
     
+
 def deposit_cluster_sphere(
     center: npt.NDArray[np.int_], 
     cluster_size: float, 
@@ -627,8 +633,9 @@ def deposit_cluster_sphere(
             this cluster instance.
 
     Returns:
-        Array of float coordinates of shape (N, d), where N is the number of
-        points in this cluster instance and d is the dimensionality of the data.
+        - npt.NDArray[np.float_]: Array of float coordinates of shape (N, d),
+          where N is the number of points in this cluster instance and d is the
+          dimensionality of the data.
     """
 
     cluster_sd = cluster_size / 4
@@ -639,8 +646,6 @@ def deposit_cluster_sphere(
     return np.vstack((x,y,z)).T  
 
 
-
-# Pts unassigned to any clusters added to the space
 def add_noise_pts(
     X_coords: npt.NDArray[np.float_], 
     noise_pts: int, 
@@ -669,8 +674,9 @@ def add_noise_pts(
             See simulate_clusters().
 
     Returns:
-        Array of float coordinates with shape (N, d) where N is the number of
-        noise points deposited and d is the dimensionality of the data.
+        - npt.NDArray[np.float_]: Array of float coordinates with shape (N, d),
+          where N is the number of noise points deposited and d is the
+          dimensionality of the data.
     """
 
     pts = int(noise_pts)
@@ -726,9 +732,6 @@ def add_noise_pts(
             return X_noise.T
         
 
-# coords in the nx2 or nx3 points array
-# default behavior is no z (precision arrays set to None)
-# conditional execution of the z dim requires both mean and sigma for the axial to not be None-type
 def add_uncertainty(
     coords: npt.NDArray[np.float_], 
     label_pad: npt.NDArray[np.float_], 
@@ -769,13 +772,13 @@ def add_uncertainty(
 
     Returns:
         Tuple containing:
-            - Array of float coordinates with shape (N, d) where N is the total number
-              of points in the simulation grid after applying localization uncertainty
-              and optional multi emitter adjustments, and d is the dimensionality of
-              the data.
-            - Array of integer labels with shape (N,) where N is the total number of
-              points in the simulation grid after applying uncertainty and optional 
-              multi emitter adjustments.
+            - npt.NDArray[np.float_]: Array of float coordinates with shape (N, d),
+              where N is the total number of points in the simulation grid after
+              applying localization uncertainty and optional multi emitter
+              adjustments, and d is the dimensionality of the data.
+            - npt.NDArray[np.int_]: Array of integer labels with shape (N,) where N is
+              the total number of points in the simulation grid after applying
+              uncertainty and optional multi emitter adjustments.
     """
 
     num_points = coords.shape[0]
