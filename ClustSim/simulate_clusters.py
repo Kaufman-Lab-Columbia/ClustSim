@@ -12,7 +12,7 @@ def simulate_clusters(
     cluster_size: Union[int, Tuple[int, int]], 
     noise_pts: int = 0, 
     gradient: bool = False, 
-    space: Tuple[int, int] = (0, 1000), 
+    space: Union[int, Tuple[int, int]] = (0, 1000), 
     cluster_shape: str = 'circle', 
     aspect_ratio: float = 1.0, 
     fix_AR: bool = True, 
@@ -52,8 +52,10 @@ def simulate_clusters(
         gradient (bool): 
             Sets the character of the noise. False will result in uniform random
             noise, while True will yield an uneven gradient of noise.
-        space (Tuple[int, int]): 
-            The bounds of the simulation plane, (lower_bound, upper_bound). These
+        space (Union[int,Tuple[int, int]): 
+            The bounds of the simulation plane. A single value will set the 
+            upper bound with a lower bound default of 0. A tuple 
+            (lower_bound, upper_bound) will set a custom lower bound. These
             bounds are applied to all dimensions.
         cluster_shape (str): 
             The type of clusters to simulate. This can be set to: "circle",
@@ -135,6 +137,15 @@ def simulate_clusters(
     """
 
     # Create the clusters with the specified parameters
+
+    try:
+        length_space = len(space)
+        if lenght_space != 2:
+            print('Warning: more than two values specified for space parameter.'+
+                ' Bounds should be either a single upper bound or (lower bound, upper bound)')
+    except TypeError:
+        space = (0, space)
+
     try:
         X_clusts, label_list = deposit_clusters(
             num_clusters, clustered_pts, cluster_size, space, aspect_ratio,
