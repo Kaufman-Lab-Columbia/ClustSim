@@ -35,7 +35,7 @@ plot_clusters(X, labels)
 </p>
 
 ### Varying Cluster Shape
-Circular, elliptical, micellular, or fibrillar clusters in 2D, or spherical clusters in 3D, can be simulated by setting the `cluster_shape` parameter to `'circle'`, `'ellipse'`, `'micelle'`, `'fiber'`, or `'sphere'`, respectively. The simulation size is defined by setting `space=(lower_bound, upper_bound)`. The separation between cluster centers can also be set using the `min_sep` argument. 
+Circular, elliptical, micellular, or fibrillar clusters in 2D, or spherical clusters in 3D, can be simulated by setting the `cluster_shape` parameter to `'circle'`, `'ellipse'`, `'micelle'`, `'fiber'`, or `'sphere'`, respectively. The simulation size is defined by setting `space=upper_bound` which will set the size of the simulation with origin set at 0. Otherwise, the origin can be set manually with `space=(lower_bound, upper_bound)`. The separation between cluster centers can also be set using the `min_sep` argument. 
 
 ```
 X, labels = simulate_clusters(
