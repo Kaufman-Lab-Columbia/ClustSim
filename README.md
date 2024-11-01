@@ -10,11 +10,7 @@ ClustSim is a Python program designed to construct simulated single molecule loc
 ### Installation
 ClustSim can be installed via pip:
 ```
-pip install ....?
-```
-or
-```
-pip install ....?
+check back later
 ```
 
 ## Basic Usage
@@ -181,6 +177,6 @@ ClustSim is licensed with an MIT license. See LICENSE file for more information.
 ## Referencing
 If you use ClustSim for your work, cite with the following:
 ```
-Cite here
+Paper currently in preparation, check back later.
 ```
 ## Contact 
