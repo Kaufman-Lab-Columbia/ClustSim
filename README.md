@@ -180,3 +180,4 @@ If you use ClustSim for your work, cite with the following:
 Paper currently in preparation, check back later.
 ```
 ## Contact 
+kaufmangroup.rubylab@gmail.com
