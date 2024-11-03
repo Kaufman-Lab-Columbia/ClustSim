@@ -140,7 +140,7 @@ def simulate_clusters(
 
     try:
         length_space = len(space)
-        if lenght_space != 2:
+        if length_space != 2:
             print('Warning: more than two values specified for space parameter.'+
                 ' Bounds should be either a single upper bound or (lower bound, upper bound)')
     except TypeError:
