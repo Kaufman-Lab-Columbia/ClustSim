@@ -16,7 +16,7 @@ setup(
     long_description=read_long_description(),
     author='Joseph L. Hammer, Alexander J. Devanny',
     author_email='jhammer3018@gmail.com',
-    url='',
+    url='https://github.com/Kaufman-Lab-Columbia/ClustSim',
     packages=['ClustSim'],
     license ="MIT",
     keywords = "cluster clusters clustering simulation simulate",
