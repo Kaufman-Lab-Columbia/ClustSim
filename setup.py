@@ -12,7 +12,7 @@ setup(
     name='ClustSim',
     version='1.0.0',
     description='Cluster simulations',
-    long_description_content_tyype='text/markdown',
+    long_description_content_type='text/markdown',
     long_description=read_long_description(),
     author='Joseph L. Hammer, Alexander J. Devanny',
     author_email='jhammer3018@gmail.com',
