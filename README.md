@@ -179,7 +179,8 @@ If you use ClustSim for your work, cite with the following (currently in preprin
 
 Hammer, J. L., Devanny, A. J. & Kaufman, L. J. Density-based optimization for unbiased, reproducible clustering applied to single molecule localization microscopy. Preprint at https://www.biorxiv.org/content/10.1101/2024.11.01.621498v1 (2024)
 
-![image](https://github.com/user-attachments/assets/a7bbbf8c-941a-439f-b600-07930b03ced8)
+![image](https://github.com/user-attachments/assets/44f57441-a487-417c-b2bc-bf08b00ae47d)
+
 
 ## Contact 
 kaufmangroup.rubylab@gmail.com
