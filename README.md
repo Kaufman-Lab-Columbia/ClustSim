@@ -1,4 +1,5 @@
 # ClustSim 
+![image](https://github.com/user-attachments/assets/a7bbbf8c-941a-439f-b600-07930b03ced8)
 
 ClustSim is a Python program designed to construct simulated single molecule localization microscopy (SMLM) data in 2D or 3D. This implementation is capable of simulating clusters with varying degrees of complexity, clusters with noise, localization uncertainties, and multi-emitter behavior. 
 
