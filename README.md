@@ -175,10 +175,11 @@ plot_clusters(X, labels)
 ## License
 ClustSim is licensed with an MIT license. See LICENSE file for more information. 
 ## Referencing
-If you use ClustSim for your work, cite with the following (currently in preprint):
+If you use ClustSim for your work, please cite with the following:
 
-Hammer, J. L., Devanny, A. J. & Kaufman, L. J. Density-based optimization for unbiased, reproducible clustering applied to single molecule localization microscopy. Preprint at https://www.biorxiv.org/content/10.1101/2024.11.01.621498v1 (2024)
+Hammer, J.L., Devanny, A.J. & Kaufman, L.J. Bayesian optimized parameter selection for density-based clustering applied to single molecule localization microscopy. Commun Biol 8, 902 (2025). https://doi.org/10.1038/s42003-025-08332-0
 
+Code DOI:
 ![image](https://github.com/user-attachments/assets/44f57441-a487-417c-b2bc-bf08b00ae47d)
 
 
